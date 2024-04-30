@@ -1,8 +1,39 @@
-# React + Vite
+# Nombre del Proyecto
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este es un proyecto creado con Vite y React. Vite es una herramienta de construcción que ayuda a configurar proyectos de desarrollo web de manera rápida y eficiente, mientras que React es una popular biblioteca de JavaScript para construir interfaces de usuario.
 
-Currently, two official plugins are available:
+## Características
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Vite**: Herramienta de construcción rápida y ligera que aprovecha el módulo ECMAScript nativo para conseguir tiempos de arranque increíblemente rápidos.
+- **React**: Biblioteca de JavaScript para crear interfaces de usuario reactivas y reutilizables.
+- **JavaScript moderno**: Utiliza las últimas características de JavaScript respaldadas por navegadores modernos.
+
+## Requisitos previos
+
+Antes de ejecutar este proyecto, asegúrate de tener instalado Node.js en tu sistema. Puedes descargarlo desde el [sitio oficial de Node.js](https://nodejs.org).
+
+## Instalación
+
+1. Clona este repositorio en tu máquina local:
+
+```bash
+git clone https://github.com/yosefhdev/Hero-Shop.git
+```
+
+2. Navega al directorio del proyecto:
+
+```bash
+cd Hero-Shop
+```
+
+3. Instala las dependencias del proyecto:
+
+```bash
+npm install
+```
+
+## Instalación
+
+```bash
+npm run dev
+```
