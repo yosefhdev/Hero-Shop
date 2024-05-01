@@ -72,32 +72,32 @@ const CreateProduct = () => {
 
     return (
         <>
-            <section className="">
+            <section className="m-5">
                 <div className="">
-                    <h2 className="">Agregar productos nuevos</h2>
+                    <h2 className="">Agregar productos nuevos.</h2>
                     <form action="#" onSubmit={handleSubmit}>
-                        <div className="">
+                        <div className="flex flex-col gap-5">
                             <div className="">
                                 <label htmlFor="name" className="">Nombre del producto</label>
-                                <input type="text" name="name" id="name" className=""
+                                <input type="text" name="name" id="name" className="border-2 border-black"
                                     placeholder="Escribe el nombre del producto" required=""
                                     value={nombre} onChange={(e) => setNombre(e.target.value)} />
                             </div>
                             <div className="">
                                 <label htmlFor="tipo" className="">Variaciones</label>
-                                <input type="text" name="tipo" id="tipo" className=""
+                                <input type="text" name="tipo" id="tipo" className="border-2 border-black"
                                     placeholder="Tallas, colores, etc." required=""
                                     value={tipo} onChange={(e) => setTipo(e.target.value)} />
                             </div>
                             <div className="">
                                 <label htmlFor="price" className="=">Precio</label>
-                                <input type="number" name="price" id="price" className=""
+                                <input type="number" name="price" id="price" className="border-2 border-black"
                                     placeholder="$100" required=""
                                     value={precio} onChange={(e) => setPrecio(e.target.value)} />
                             </div>
                             <div>
                                 <label htmlFor="category" className="">Categoria</label>
-                                <select id="category" className=""
+                                <select id="category" className="border-2 border-black"
                                     value={categoria_p} onChange={(e) => setCategoria_p(e.target.value)} >
                                     {fetchError && <option value="">{fetchError}</option>}
                                     {categorias && categorias.map(categoria => (
@@ -111,13 +111,13 @@ const CreateProduct = () => {
                             </div>
                             <div>
                                 <label htmlFor="item-weight" className="">Existencias</label>
-                                <input type="number" name="item-weight" id="item-weight" className=""
+                                <input type="number" name="item-weight" id="item-weight" className="border-2 border-black"
                                     placeholder="12" required=""
                                     value={existencia} onChange={(e) => setExistencia(e.target.value)} />
                             </div>
                             <div className="sm:col-span-2">
                                 <label htmlFor="description" className="">Descripcion</label>
-                                <textarea id="description" rows="8" className=""
+                                <textarea id="description" rows="8" className="border-2 border-black"
                                     placeholder="Your description here"
                                     value={descripcion} onChange={(e) => setDescripcion(e.target.value)}></textarea>
                             </div>
