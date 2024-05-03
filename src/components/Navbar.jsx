@@ -74,9 +74,15 @@ const Navbar = () => {
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link to="/"
+                                    <Link to="/login"
                                         className="block py-2 pr-4 pl-3 text-white  hover:bg-gray-50 hover:text-primary rounded-lg transition-colors duration-300 bg-primary-700 lg:bg-transparent lg:text-primary-700 lg:px-2 lg:py-1 dark:text-white" aria-current="page">
                                         Iniciar Sesion
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link to="/register"
+                                        className="block py-2 pr-4 pl-3 text-white  hover:bg-gray-50 hover:text-primary rounded-lg transition-colors duration-300 bg-primary-700 lg:bg-transparent lg:text-primary-700 lg:px-2 lg:py-1 dark:text-white" aria-current="page">
+                                        Registrarse
                                     </Link>
                                 </li>
                             </ul>
