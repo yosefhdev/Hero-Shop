@@ -61,6 +61,11 @@ const Dashboard = () => {
 		// Agregar los datos de los otros productos aquí
 	  ];
 
+	const handleLogOut = async () => {
+		sessionStorage.removeItem('token')
+		navigate('/landing')
+	}
+
 	return (
 		<html lang="en">
 			

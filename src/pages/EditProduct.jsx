@@ -5,10 +5,15 @@ import supabase from "../supabase/client"
 import { IconX } from '@tabler/icons-react';
 import { IconPencil } from '@tabler/icons-react';
 
-const EditProduct = () => {
+// eslint-disable-next-line react/prop-types
+const EditProduct = ({token}) => {
+
+	const navigate = useNavigate()
+	if (!token || token == null || token == []) {
+        navigate('/login')
+    }
 
 	const { id } = useParams()
-	const navigate = useNavigate()
 
 	const [fetchError, setFetchError] = useState(null)
 	const [categorias, setCategorias] = useState(null)
