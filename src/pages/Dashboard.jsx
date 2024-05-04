@@ -1,105 +1,184 @@
-import Title from '../components/Title'
-import ProductCard from '../components/ProductCard'
+import React from 'react';
+import { IconUser, IconUserCircle } from '@tabler/icons-react';
+//import ProductCard from '../components/ProductCard'
+import '../Dashboard.css';
+import logo from '../assets/logos/Hero-Shop-logo.webp';
+import { IconSearch } from '@tabler/icons-react';
+import { IconChartInfographic } from '@tabler/icons-react';
+import { IconEdit } from '@tabler/icons-react';
+import { IconStar } from '@tabler/icons-react';
+import { IconStarFilled } from '@tabler/icons-react';
+import { Link } from "react-router-dom";
+
+
 import supabase from '../supabase/client'
 import { useEffect, useState } from 'react'
-import { IconArrowUp } from '@tabler/icons-react';
-import { IconArrowDown } from '@tabler/icons-react';
-import { IconSortAZ } from '@tabler/icons-react';
-import { IconClock } from '@tabler/icons-react';
-import { IconCoin } from '@tabler/icons-react';
 
+// Componente reutilizable para representar un producto
+const ProductCard = ({ imgSrc, name, discount, stars, price }) => {
+	return (
+	  <div className="card-product">
+		<div className="container-img">
+		  {/* Imagen del producto */}
+		  <img src={imgSrc} alt="Edicion limitada" />
+		  {/* Descuento si está disponible */}
+		  {discount && <span className="discount">{discount}</span>}
+		  {/* Botón de acción */}
+		  <div className="button-group">
+			<span>
+        <IconChartInfographic className='Icon1' stroke={3} size={'2.3rem'} />
+			</span>
+		  </div>
+		</div>
+		<div className="content-card-product">
+		  {/* Calificación del producto */}
+		  <div className="stars">
+			{stars.map((star, index) => (
+        <span key={index} onMouseEnter={() => handleMouseEnter(index)} onMouseLeave={() => handleMouseLeave(index)}>
+        {star ? <IconStarFilled size='1.7rem' className='SLlena'/> : <IconStar size='1.7rem' className='Ssin'/>}
+      </span>
+			))}
+		  </div>
+		  {/* Nombre del producto */}
+		  <h3>{name}</h3>
+		  {/* Icono de edición y precio */}
+		  <span className="editar-producto">
+      <IconEdit className='Editar' stroke={2.4} size={'2rem'}/>
+		  </span>
+		  <p className="price">{price}</p>
+		</div>
+	  </div>
+	);
+  };
+  
 const Dashboard = () => {
-
-	const [fetchError, setFetchError] = useState(null)
-	const [productos, setProductos] = useState(null)
-	const [orderBy, setOrderBy] = useState('created_at')
-	const [asc, setAsc] = useState(true)
-	// const [lastAsc, setLastAsc] = useState(true)
-
-	const handleDelete = (id) => {
-		setProductos(productoAnterior => {
-			return productoAnterior.filter(producto => producto.id !== id)
-		})
-	}
-
-	const handleOrder = (order) => {
-		if (orderBy === order) {
-			setAsc(!asc)
-		} else {
-			setOrderBy(order)
-			setAsc(true)
-		}
-	}
-
-	useEffect(() => {
-		const fetchProducts = async () => {
-			const { data, error } = await supabase
-				.from('productos')
-				.select()
-				.order(orderBy, { ascending: asc })
-
-			if (error) {
-				setFetchError("Error al cargar los productos")
-				console.log('error', error)
-				setProductos(null)
-			}
-
-			if (data) {
-				setProductos(data)
-				setFetchError(null)
-			}
-		}
-
-		fetchProducts()
-
-	}, [orderBy, asc])
+	  // Datos de los productos
+	  const products = [
+		{ imgSrc: 'src/assets/logos/Pin_1_Luffy_Chibi.png', name: 'Pin Luffy Happy', discount: '-10%', stars: [true, true, true, true, false], price: '$63.00' },
+		{ imgSrc: 'src/assets/logos/CuadroCSM_3.png', name: 'Cuadro Chainsam Man', discount: '-5%', stars: [true, true, true, true, true], price: '$114.00' },
+		{ imgSrc: 'src/assets/logos/PlayeraLuffyG5_1-Photoroom.png', name: 'Playera Luffy G5', discount: '', stars: [true, true, true, false, false], price: '$220.00' },
+		{ imgSrc: 'src/assets/logos/Pin_Mario_Clasicopixel-Photoroom.png', name: 'Pin Mario Bros Pixeles', discount: '-20%', stars: [true, true, true, true, false], price: '$48.00' },
+		// Agregar los datos de los otros productos aquí
+	  ];
 
 	return (
-		<div className="m-5 flex flex-col">
+		<html lang="en">
+			
+		<head>
+		  <meta charSet="UTF-8" />
+		  <meta httpEquiv="X-UA-Compatible" content="IE-edge" />
+		  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		  <title>Hero-shop</title>
+		  <link rel="stylesheet" href="stylesD_Admin.css" />
+		  <script src="https://kit.fontawesome.com/8c7ebf749c.js" crossorigin="anonymous"></script>
 
+		</head>
+		<body>
+        <header>
+          <div className="container-hero">
+            <div className="container hero">
+              <div className="container-logo" >
+                <Link to="/" className="flex items-center">
+                <img src={logo} className="rounded-full mr-3 h-6 sm:h-9" alt="Flowbite Logo" /></Link>
+                <h1 className="logo"><a href="/">Hero-shop Administrador</a></h1>
+              </div>
+              <div className="container-user">
+              
+              <IconUserCircle stroke={1.5} size={65} style={{ color: 'var(--primary-color)',margin: '-.9rem -.9rem', paddingRight: '2rem', paddingLeft: '.7rem' }} />
+              </div>
+            </div>
+          </div>
 
-			<section className=''>
-				{/* <div className='flex flex-wrap w-full'> */}
-				<Title title={"Productos"} />
-				<div className='flex px-5 gap-x-5 w-full justify-end'>
-					<p className='p-2'>Ordenar por:</p>
-					<div className='p-2'>
-						{!asc ? <IconArrowUp stroke={2} />
-							: <IconArrowDown stroke={2} />}
+          <div>
+            <div className="container-navbar">
+              <nav className="navbar container">
+                <i className="fa-solid fa-bars"></i>
+                <ul className="menu">
+                  <li><a href="#">Inicio</a></li>
+                  <li><a href="#">Pedidos</a></li>
+                  <li><a href="#">Agregar Categoria</a></li>
+                  <li><a href="#">Venta</a></li>
+                  <li><a href="#">Devoluciones</a></li>
+                  <li><a href="#">Quejas/sugerencias</a></li>
+                  <li><a href="#">Usuarios</a></li>
+                </ul>
+                <form className="search-form">
+                  <input type="search" placeholder="Buscar..." />
+                  <button className="btn-search">
+	
+                    <IconSearch stroke={3} size='2rem' style={{color: '#fff'}}/>
+                  </button>
+                </form>
+              </nav>
+            </div>
+          </div>
+        </header>
 
-					</div>
-					<button onClick={() => handleOrder('created_at')} className={`flex items-center gap-1 p-2 border-b-2 ${orderBy === 'created_at' ? 'text-primary border-primary' : ''} hover:border-primary hover:text-primary`}>
-						<IconClock stroke={2} />
-						Creacion
-					</button>
-					<button onClick={() => handleOrder('nombre')} className={`flex items-center gap-1 p-2 border-b-2 ${orderBy === 'nombre' ? 'text-primary border-primary' : ''} hover:border-primary hover:text-primary`}>
-						<IconSortAZ stroke={2} />
-						Nombre
-					</button>
-					<button onClick={() => handleOrder('precio')} className={`flex items-center gap-1 p-2 border-b-2 ${orderBy === 'precio' ? 'text-primary border-primary' : ''} hover:border-primary hover:text-primary`}>
-						<IconCoin stroke={2} />
-						Precio
-						{/* {!asc ? <svg xmlns="http://www.w3.org/2000/svg" className='size-5' viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><polyline points="6 9 12 15 18 9" /></svg> : <svg xmlns="http://www.w3.org/2000/svg" className='size-5' viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><polyline points="6 15 12 9 18 15" /></svg>} */}
-					</button>
-				</div>
-				<div>
-					{fetchError && <p>{fetchError}</p>}
-					{productos && productos.map(producto => (
-						<ProductCard
-							key={producto.id}
-							id={producto.id}
-							tipo={producto.tipo}
-							nombre={producto.nombre}
-							precio={producto.precio}
-							onDelete={handleDelete}
-						/>
-					))}
+        <main className="main-content">
+          <section className="container top-categories">
+            <h1 className="heading-1">Categorias disponibles</h1>
+            <div className="container-categories">
+              <div className="card-category category-playeras">
+                <p>Playeras</p>
+                <span>Ver más</span>
+              </div>
+              <div className="card-category category-pines">
+                <p>Pines Metalicos</p>
+                <span>Ver más</span>
+              </div>
+              <div className="card-category category-cuadros">
+                <p>Cuadros</p>
+                <span>Ver más</span>
+              </div>
+              <div className="card-category category-Otros">
+                <p>Otros</p>
+                <span>Ver más</span>
+              </div>
+            </div>
+          </section>
+		  <section className="container top-products">
+      {/* Opciones de filtrado de productos */}
+      <div className="container-options">
+        <span className="active">Mas vendidos</span>
+        <span>Mas antiguos</span>
+        <span>En promocion</span>
+        <span>Agregados recientemente</span>
+      </div>
 
-				</div>
-			</section>
+      {/* Contenedor de productos */}
+      <div className="container-products">
+        {/* Representar cada producto utilizando el componente ProductCard */}
+        {products.map((product, index) => (
+          <ProductCard key={index} {...product} />
+        ))}
+      </div>
+      
+      <div className="container-products">
+        {/* Representar cada producto utilizando el componente ProductCard */}
+        {products.map((product, index) => (
+          <ProductCard key={index} {...product} />
+        ))}
+      </div>
 
-		</div>
-	)
-}
-
-export default Dashboard
+      <div className="container-products">
+        {/* Representar cada producto utilizando el componente ProductCard */}
+        {products.map((product, index) => (
+          <ProductCard key={index} {...product} />
+        ))}
+      </div>
+      {/* Controles de paginación */}
+      <h1 className="pages">Pagina</h1>
+      <div className="container-paginas">
+        <span className="active">Anterior</span>
+        <span>Siguiente</span>
+      </div>
+    </section>
+ 
+        </main>
+		<script src="https://kit.fontawesome.com/8c7ebf749c.js" crossorigin="anonymous"></script>
+      </body>
+	  </html>
+	);
+  }
+  
+  export default Dashboard 

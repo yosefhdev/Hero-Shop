@@ -9,16 +9,15 @@ import Dashboard from './pages/Dashboard';
 import CreateProduct from './pages/CreateProduct';
 import EditProduct from './pages/EditProduct';
 import EditUser from './pages/EditUser';
-import Navbar from "./components/Navbar";
-
+//import Navbar from "./components/Navbar";
 function App() {
 
   return (
     <>
       <BrowserRouter>
-        <Navbar />
+        {/*<Navbar />*/}
         <Routes>
-          <Route path="/" element={<LandingPage />} />
+          <Route path="/" element={<Dashboard/>} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/dashboard" element={<Dashboard />} />
