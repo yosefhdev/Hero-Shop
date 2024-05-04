@@ -4,7 +4,7 @@ import supabase from "../supabase/client"
 
 const Register = () => {
 
-	const [formSata, setFormData] = useState({
+	const [formData, setFormData] = useState({
 		nombre: '',
 		apellido_paterno: '',
 		apellido_materno: '',
@@ -13,6 +13,8 @@ const Register = () => {
 		password_confirmation: ''
 	})
 
+	console.log(formData)
+	
 	function handleChange(event) {
 		setFormData((prevFormData) => {
 			return {
@@ -20,6 +22,7 @@ const Register = () => {
 				[event.target.name]: event.target.value
 			}
 		})
+		console.log(formData)
 	}
 
 	async function handleSubmit(e) {
@@ -27,19 +30,20 @@ const Register = () => {
 		try {
 			const { data, error } = await supabase.auth.signUp(
 				{
-					email: formSata.correo,
-					password: formSata.password,
+					email: formData.correo,
+					password: formData.password,
 					options: {
 						data: {
-							name: formSata.nombre,
-							apellido_P: formSata.apellido_paterno,
-							apellido_M: formSata.apellido_materno
+							name: formData.nombre,
+							apellido_P: formData.apellido_paterno,
+							apellido_M: formData.apellido_materno
 						}
 					}
 				}
 			)
+			if (error) throw error 
+			console.log(data)
 
-			alert('Usuario registrado correctamente, verifica tu correo para activar tu cuenta')
 		} catch (error) {
 			console.log('error', error)
 		}

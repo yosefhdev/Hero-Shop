@@ -1,9 +1,27 @@
-import { Link } from "react-router-dom";
+/* eslint-disable react/prop-types */
+import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import logo from '../assets/logos/Hero-Shop-logo.webp';
 import { IconBaselineDensityMedium } from '@tabler/icons-react';
 
-const Navbar = () => {
+const Navbar = ({ token }) => {
+
+    const navigate = useNavigate();
+    let user = null;
+
+    useEffect(() => {
+        if (token) {
+            if (token.user.user_metadata.full_name) {
+                user = token.user.user_metadata.full_name;
+            } else {
+                user = token.user.email;
+            }
+        } else {
+            navigate('/dashboard')
+        }
+    }, [token, navigate])
+
+
 
     const [isOpen, setIsOpen] = useState(false);
     const toggleMenu = () => {
@@ -36,6 +54,9 @@ const Navbar = () => {
                             <span className="self-center text-xl font-semibold whitespace-nowrap text-white">Hero-Shop</span>
                         </Link>
 
+                        <div className="mx-auto">
+                            {user && <span className="text-white text-sm">Bienvenido {user}</span>}
+                        </div>
 
                         <div className="flex items-end  md:order-2 lg:order-2">
                             <button onClick={toggleMenu} data-collapse-toggle="mobile-menu-2" type="button"
@@ -73,22 +94,12 @@ const Navbar = () => {
                                         Crear Producto
                                     </Link>
                                 </li>
-                                <li>
-                                    <Link to="/login"
-                                        className="block py-2 pr-4 pl-3 text-white  hover:bg-gray-50 hover:text-primary rounded-lg transition-colors duration-300 bg-primary-700 lg:bg-transparent lg:text-primary-700 lg:px-2 lg:py-1 dark:text-white" aria-current="page">
-                                        Iniciar Sesion
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link to="/register"
-                                        className="block py-2 pr-4 pl-3 text-white  hover:bg-gray-50 hover:text-primary rounded-lg transition-colors duration-300 bg-primary-700 lg:bg-transparent lg:text-primary-700 lg:px-2 lg:py-1 dark:text-white" aria-current="page">
-                                        Registrarse
-                                    </Link>
-                                </li>
                             </ul>
+
                         </div>
                     </div>
                 </nav>
+
             </header>
         </>
 

@@ -8,15 +8,20 @@ import { IconArrowDown } from '@tabler/icons-react';
 import { IconSortAZ } from '@tabler/icons-react';
 import { IconClock } from '@tabler/icons-react';
 import { IconCoin } from '@tabler/icons-react';
+import { useNavigate } from 'react-router-dom'
 
 
-const Dashboard = () => {
+// eslint-disable-next-line react/prop-types
+const Dashboard = ({ token }) => {
+	const navigate = useNavigate();
+	if (!token || token == null || token == []) {
+        navigate('/login')
+    }
 
 	const [fetchError, setFetchError] = useState(null)
 	const [productos, setProductos] = useState(null)
 	const [orderBy, setOrderBy] = useState('created_at')
 	const [asc, setAsc] = useState(true)
-	// const [lastAsc, setLastAsc] = useState(true)
 
 	const handleDelete = (id) => {
 		setProductos(productoAnterior => {
@@ -56,6 +61,11 @@ const Dashboard = () => {
 
 	}, [orderBy, asc])
 
+	const handleLogOut = async () => {
+		sessionStorage.removeItem('token')
+		navigate('/landing')
+	}
+
 	return (
 		<>
 			<Navbar />
@@ -64,6 +74,9 @@ const Dashboard = () => {
 				<section className=''>
 					{/* <div className='flex flex-wrap w-full'> */}
 					<Title title={"Productos"} />
+					<button onClick={handleLogOut}>
+						Cerrar Sesion
+					</button>
 					<div className='flex px-5 gap-x-5 w-full justify-end'>
 						<p className='p-2'>Ordenar por:</p>
 						<div className='p-2'>
