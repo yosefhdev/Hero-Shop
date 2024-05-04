@@ -3,125 +3,30 @@ import { Link } from "react-router-dom"
 const Login = () => {
   return (
     <div className="m-5">
-      <Link to={'/'} className="bg-primary text-white px-2 py-1 rounded-xl m-5">
-        Volver al Inicio
-      </Link>
+    <Link to={'/'} className="bg-primary text-white px-2 py-1 rounded-xl m-5">
+      Volver al Inicio
+    </Link>
 
-      <div className="Fondo"></div>
-      <div className="formulario" style={{
-        position: 'absolute',
-        background: 'white',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: '400px',
-        height: '500px',
-        borderRadius: '25px',
-        border: '2px solid gainsboro',
-        boxShadow: '0px 0px 25px #222',
-      }}>
-        <h1 style={{
-          color: '#1C50CB',
-          textAlign: 'center',
-          padding: '0 0 20px 0',
-          borderBottom: '1px solid gainsboro',
-        }}>Inicio de Sesion</h1>
-        <form style={{
-          padding: '0 40px',
-          boxSizing: 'border-box',
-        }} method="post">
-          <div className="UserData" style={{
-            position: 'relative',
-            borderBottom: '2px solid gainsboro',
-            margin: '30px 0',
-          }}>
-            <input type="text" required style={{
-              width: '100%',
-              fontWeight: 'normal',
-              padding: '0 5px',
-              height: '60px',
-              fontSize: '14px',
-              color: 'gray',
-              border: 'none',
-              background: 'none',
-              outline: 'none',
-            }} />
-            <label style={{
-              position: 'absolute',
-              top: '-15%',
-              left: '5px',
-              color: 'gainsboro',
-              transform: 'translate(0%)',
-              fontSize: '16px',
-            }}>Nombre de Usuario</label>
-            <span style={{
-              position: 'absolute',
-              top: '40%',
-              left: '0',
-              width: '100%',
-              height: '2px',
-              background: '#251D4E',
-            }}></span>
+    <div className="Fondo"></div>
+      <div className="formulario absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-400px h-500px bg-white p-10 rounded-lg border-2 border-gray-300 shadow-md " >
+        <h1 className="text-blue-600 text-2xl font-bold text-center mb-8 border-b-2 border-gray-400">Inicio de Sesion</h1>
+        <form className="px-50" method="post">
+          <div className="relative mb-8">
+            <input type="text" required className="w-full border-b-2 border-gray-300 focus:outline-none focus:border-blue-600 px-2 py-2" />
+            <label className="absolute top-2 left-2 -mt-6 text-gray-400 text-sm">Nombre de Usuario</label>
           </div>
-          <div className="UserData" style={{
-            position: 'relative',
-            borderBottom: '2px solid gainsboro',
-            margin: '30px 0',
-          }}>
-            <input type="password" required style={{
-              width: '100%',
-              fontWeight: 'normal',
-              padding: '0 5px',
-              height: '60px',
-              fontSize: '14px',
-              color: 'gray',
-              border: 'none',
-              background: 'none',
-              outline: 'none',
-            }} />
-            <label style={{
-              position: 'absolute',
-              top: '-15%',
-              left: '5px',
-              color: 'gainsboro',
-              transform: 'translate(0%)',
-              fontSize: '16px',
-            }}>Contraseña</label>
-            <span style={{
-              position: 'absolute',
-              top: '40%',
-              left: '0',
-              width: '100%',
-              height: '2px',
-              background: '#251D4E',
-            }}></span>
+          <div className="relative mb-8">
+            <input type="password" required className="w-full border-b-2 border-gray-300 focus:outline-none focus:border-blue-600 px-2 py-2" />
+            <label className="absolute top-2 left-2 -mt-6 text-gray-400 text-sm">Contraseña</label>
           </div>
-          <div style={{
-            fontSize: '12px',
-            position: 'relative',
-            color: 'gray',
-            margin: '30px 0',
-          }}>
-            <a href="#">¿Olvidaste tu contraseña?</a>
-          </div>
-          <input type="submit" value="Iniciar" style={{
-            fontFamily: 'Lexend',
-            fontSize: '20px',
-            fontWeight: 'bold',
-            color: 'white',
-            backgroundColor: '#1C50CB',
-            border: 'none',
-            width: '320px',
-            height: '50px',
-            borderRadius: '15px',
-          }} />
-          No tienes una cuenta? &nbsp;
-          <Link to={'/register'} className="text-primary hover:border-b hover:border-primary">
-            Quiero registrarme
-          </Link>
-        </form>
-      </div>
+        <div className="text-gray-600 text-sm mb-6">
+          <a href="#">¿Olvidaste tu contraseña?</a>
+        </div>
+        <input type="submit" value="Iniciar" className="bg-blue-600 text-white font-semibold py-2 px-4 rounded-full w-full" />
+        <p className="text-gray-600 text-sm mt-6">No tienes una cuenta? <Link to={'/register'} className="text-primary hover:border-b hover:border-primary">Quiero registrarme</Link></p>
+      </form>
     </div>
+  </div>
   )
 }
 
