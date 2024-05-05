@@ -67,17 +67,6 @@ const Dashboard = () => {
 	}
 
 	return (
-		<html lang="en">
-			
-		<head>
-		  <meta charSet="UTF-8" />
-		  <meta httpEquiv="X-UA-Compatible" content="IE-edge" />
-		  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		  <title>Hero-shop</title>
-		  <link rel="stylesheet" href="stylesD_Admin.css" />
-		  <script src="https://kit.fontawesome.com/8c7ebf749c.js" crossorigin="anonymous"></script>
-
-		</head>
 		<body>
         <header>
           <div className="container-hero">
@@ -180,9 +169,8 @@ const Dashboard = () => {
     </section>
  
         </main>
-		<script src="https://kit.fontawesome.com/8c7ebf749c.js" crossorigin="anonymous"></script>
       </body>
-	  </html>
+	  
 	);
   }
   
