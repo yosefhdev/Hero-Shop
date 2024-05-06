@@ -31,6 +31,5 @@ PublicProductCard.propTypes = {
     precio: PropTypes.number.isRequired,
     descripccion: PropTypes.string,
     id: PropTypes.number.isRequired,
-    onDelete: PropTypes.func.isRequired,
 };
 export default PublicProductCard;
