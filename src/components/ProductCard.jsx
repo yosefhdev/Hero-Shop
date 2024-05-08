@@ -63,7 +63,7 @@ const ProductCard = ({ id, tipo, nombre, precio, descripccion, onDelete }) => {
                     </div>
                     <div className="flex justify-end gap-x-1 mt-4">
                         {/* Editar */}
-                        <Link to={'/editar-producto/' + id}>
+                        <Link to={'/edit-product/' + id}>
                             <button className="bg-primary p-2 rounded-full h-min">
                                 <IconPencil className='size-5 text-white text-xl ' stroke={2} />
                             </button>
