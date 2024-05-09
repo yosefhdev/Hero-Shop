@@ -6,13 +6,30 @@ import { IconX } from '@tabler/icons-react';
 import { IconPencil } from '@tabler/icons-react';
 
 // eslint-disable-next-line react/prop-types
-const EditProduct = ({token}) => {
+const EditProduct = () => {
+
+
+	const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+	useEffect(() => {
+		const checkAuth = async () => {
+			const { data: { session } } = await supabase.auth.getSession();
+			setIsAuthenticated(!!session);
+		};
+		checkAuth();
+
+		const { data: { subscription } } = supabase.auth.onAuthStateChange(
+			(event, session) => {
+				setIsAuthenticated(!!session);
+			}
+		);
+
+		return () => {
+			subscription?.unsubscribe();
+		};
+	}, []);
 
 	const navigate = useNavigate()
-	if (!token || token == null || token == []) {
-        navigate('/login')
-    }
-
 	const { id } = useParams()
 
 	const [fetchError, setFetchError] = useState(null)
@@ -32,7 +49,10 @@ const EditProduct = ({token}) => {
 
 			if (data) {
 				setCategorias(data)
-				setFetchError(null)
+				setFetchError(null
+
+
+				)
 			}
 		}
 
@@ -46,6 +66,7 @@ const EditProduct = ({token}) => {
 	const [categoria_p, setCategoria_p] = useState(0)
 	const [existencia, setExistencia] = useState(0)
 	const [tipo, setTipo] = useState('')
+	const [image, setImage] = useState(null)
 	const [formError, setFormError] = useState('')
 
 	useEffect(() => {
@@ -75,11 +96,31 @@ const EditProduct = ({token}) => {
 	const handleSubmit = async (e) => {
 		e.preventDefault()
 
-		if (!nombre || !descripcion || !precio || !categoria_p || !existencia || !tipo) {
+		if (!nombre || !descripcion || !precio || !categoria_p || !existencia || !tipo || !image || !isAuthenticated) {
 			setFormError('Por favor llena todos los campos')
 			return
 		}
 
+		let imagen_url = null;
+		if (image) {
+			const timestamp = new Date().getTime();
+			const extension = image.name.split('.').pop();
+			const uniqueName = `${timestamp}_${image.name.replace(`.${extension}`, '')}`;
+
+			const { data, error } = await supabase.storage
+				.from('imagenes_productos')
+				.upload(`${uniqueName}`, image);
+
+			if (error) {
+				setFormError('Error al subir la imagen');
+				console.error('Error al subir la imagen:', error.message);
+			} else {
+				console.log('data', data);
+				imagen_url = `https://qcuiowxnmiamysnjtwto.supabase.co/storage/v1/object/public/${data.fullPath}`;
+
+			}
+		}
+		console.log('imagen_url', imagen_url);
 		const { data, error } = await supabase
 			.from('productos')
 			.update({
@@ -88,7 +129,8 @@ const EditProduct = ({token}) => {
 				precio: precio,
 				categoria: categoria_p,
 				existencias: existencia,
-				tipo: tipo
+				tipo: tipo,
+				img_url: imagen_url
 			})
 			.eq('id', id)
 			.select()
@@ -105,11 +147,27 @@ const EditProduct = ({token}) => {
 
 	}
 
+	// Subir imagenes a supabase
+
+
+
+
 	return (
 		<>
 			<section className="m-5">
 				<h2 className="">Agregar productos nuevos</h2>
 				<form action="#" onSubmit={handleSubmit} className="flex flex-col gap-5">
+					<div className="w-full">
+						<h1 className="">Subir Imagen</h1>
+						<input
+							type="file"
+							accept=".png, .jpg, .jpeg"
+							name="file"
+							id="file"
+							className="border-2 border-black"
+							onChange={(e) => setImage(e.target.files[0])}
+						/>
+					</div>
 					<div className="w-full">
 						<label htmlFor="name" className="">Nombre del producto</label>
 						<input type="text" name="name" id="name" className="border-2 border-black"

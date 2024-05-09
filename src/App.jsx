@@ -8,6 +8,7 @@ import Dashboard from './pages/Dashboard';
 import CreateProduct from './pages/CreateProduct';
 import EditProduct from './pages/EditProduct';
 import { useEffect, useState } from "react";
+import ProtectedRoute from './components/ProtectedRoute';
 // import Navbar from "./components/Navbar";
 
 function App() {
@@ -31,16 +32,32 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<LandingPage />} />
-          <Route path="/login" element={<Login setToken={setToken} />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          {token ?
-            <>
-              <Route path="/dashboard" element={<Dashboard token={token} />} />
-              <Route path="/create-product" element={<CreateProduct token={token} />} />
-              <Route path="/edit-product/:id" element={<EditProduct token={token} />} />
-            </>
-            : ''}
-
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/create-product"
+            element={
+              <ProtectedRoute>
+                <CreateProduct />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/edit-product/:id"
+            element={
+              <ProtectedRoute>
+                <EditProduct />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </BrowserRouter>
     </>

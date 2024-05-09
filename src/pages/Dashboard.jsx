@@ -12,11 +12,8 @@ import { useNavigate } from 'react-router-dom'
 
 
 // eslint-disable-next-line react/prop-types
-const Dashboard = ({ token }) => {
+const Dashboard = () => {
 	const navigate = useNavigate();
-	if (!token || token == null || token == []) {
-        navigate('/login')
-    }
 
 	const [fetchError, setFetchError] = useState(null)
 	const [productos, setProductos] = useState(null)
@@ -97,12 +94,13 @@ const Dashboard = ({ token }) => {
 							{/* {!asc ? <svg xmlns="http://www.w3.org/2000/svg" className='size-5' viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><polyline points="6 9 12 15 18 9" /></svg> : <svg xmlns="http://www.w3.org/2000/svg" className='size-5' viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><polyline points="6 15 12 9 18 15" /></svg>} */}
 						</button>
 					</div>
-					<div>
+					<div className='grid grid-cols-4'>
 						{fetchError && <p>{fetchError}</p>}
 						{productos && productos.map(producto => (
 							<ProductCard
 								key={producto.id}
 								id={producto.id}
+								imagen={producto.img_url}
 								tipo={producto.tipo}
 								nombre={producto.nombre}
 								precio={producto.precio}

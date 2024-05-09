@@ -14,7 +14,7 @@ const Register = () => {
 	})
 
 	console.log(formData)
-	
+
 	function handleChange(event) {
 		setFormData((prevFormData) => {
 			return {
@@ -28,7 +28,7 @@ const Register = () => {
 	async function handleSubmit(e) {
 		e.preventDefault()
 		try {
-			const { data, error } = await supabase.auth.signUp(
+			const { error } = await supabase.auth.signUp(
 				{
 					email: formData.correo,
 					password: formData.password,
@@ -41,8 +41,9 @@ const Register = () => {
 					}
 				}
 			)
-			if (error) throw error 
-			console.log(data)
+			if (error) {
+				console.error('Error al registrar:', error.message);
+			}
 
 		} catch (error) {
 			console.log('error', error)

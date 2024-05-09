@@ -1,11 +1,12 @@
-import { Link, useNavigate } from "react-router-dom"
+import { Link, useNavigate, useLocation  } from "react-router-dom"
 import supabase from '../supabase/client'
 import { useState } from "react"
 
 // eslint-disable-next-line react/prop-types
-const Login = ({setToken}) => {
+const Login = () => {
 
 	let navigate = useNavigate();
+	const location = useLocation();
 
 	const [formData, setFormData] = useState({
 		email: '', password: ''
@@ -22,23 +23,24 @@ const Login = ({setToken}) => {
 
 	async function handleSubmit(e) {
 		e.preventDefault()
-		
+
 		try {
-			const { data, error } = await supabase.auth.signInWithPassword({
+			const { error } = await supabase.auth.signInWithPassword({
 				email: formData.email,
 				password: formData.password,
 			})
 			if (error) {
-				alert('Error al iniciar Sesion, verifique sus credenciales')
-				throw error
+				console.error('Error al iniciar sesión:', error.message);
+			} else {
+				// navigate('/dashboard')
+				// Redirigir al usuario a la página anterior o a la ruta deseada
+				const from = location.state?.from?.pathname || '/dashboard';
+				navigate(from, { replace: true });
 			}
-			// Login exitoso
-			setToken(data)
-			navigate('/dashboard')
 
 
 		} catch (error) {
-			console.log('error', error)
+			console.error('Error al iniciar sesión:', error.message);
 		}
 	}
 

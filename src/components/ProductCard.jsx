@@ -6,7 +6,7 @@ import { IconTrash } from '@tabler/icons-react';
 import { IconPencil } from '@tabler/icons-react';
 import { IconX } from '@tabler/icons-react';
 
-const ProductCard = ({ id, tipo, nombre, precio, descripccion, onDelete }) => {
+const ProductCard = ({ id, tipo, imagen, nombre, precio, descripccion, onDelete }) => {
 
     const handleDelete = async () => {
         const { data, error } = await supabase
@@ -48,12 +48,12 @@ const ProductCard = ({ id, tipo, nombre, precio, descripccion, onDelete }) => {
     return (
         <>
             {/* 2xl:w-1/6 xl:w-1/5 lg:w-1/4 md:w-1/3 sm:w-1/2 */}
-            <div className="w-full  p-2 grid" onClick={handleClickOutside} >
+            <div className="w-full p-2 grid" onClick={handleClickOutside} >
 
                 <div className="p-2 flex flex-col justify-between bg-gray-100 rounded-xl">
                     <div>
                         <div className="flex h-48 overflow-hidden rounded-xl">
-                            <img alt={descripccion} className="object-cover object-center w-full block" src="https://down-mx.img.susercontent.com/file/8d3c06ee8395c0b250d739f84ef60b1e" />
+                            <img alt={descripccion} className="object-cover object-center w-full block" src={imagen}/>
                         </div>
                         <div className="flex flex-col mt-4 ">
                             <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">{tipo}</h3>
@@ -107,6 +107,7 @@ const ProductCard = ({ id, tipo, nombre, precio, descripccion, onDelete }) => {
 }
 ProductCard.propTypes = {
     tipo: PropTypes.string.isRequired,
+    imagen: PropTypes.string.isRequired,
     nombre: PropTypes.string.isRequired,
     precio: PropTypes.number.isRequired,
     descripccion: PropTypes.string,
