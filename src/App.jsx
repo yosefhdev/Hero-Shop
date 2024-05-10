@@ -7,25 +7,18 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import CreateProduct from './pages/CreateProduct';
 import EditProduct from './pages/EditProduct';
-import { useEffect, useState } from "react";
+import NotFoundPage from './pages/NotFoundPage';
+import { useAuth } from './pages/auth';
 import ProtectedRoute from './components/ProtectedRoute';
 // import Navbar from "./components/Navbar";
 
 function App() {
 
-  const [token, setToken] = useState(false)
+  const { isAuthenticated, isLoading } = useAuth();
 
-  if (token) {
-    sessionStorage.setItem('token', JSON.stringify(token))
+  if (isLoading) {
+    return <div>Cargando...</div>;
   }
-
-  useEffect(() => {
-    if (sessionStorage.getItem('token')) {
-      let data = JSON.parse(sessionStorage.getItem('token'))
-      setToken(data)
-    }
-  }, [])
-
 
   return (
     <>
@@ -37,7 +30,7 @@ function App() {
           <Route
             path="/dashboard"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute isAuthenticated={isAuthenticated}>
                 <Dashboard />
               </ProtectedRoute>
             }
@@ -45,7 +38,7 @@ function App() {
           <Route
             path="/create-product"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute isAuthenticated={isAuthenticated}>
                 <CreateProduct />
               </ProtectedRoute>
             }
@@ -53,11 +46,12 @@ function App() {
           <Route
             path="/edit-product/:id"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute isAuthenticated={isAuthenticated}>
                 <EditProduct />
               </ProtectedRoute>
             }
           />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </BrowserRouter>
     </>

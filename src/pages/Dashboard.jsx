@@ -3,6 +3,7 @@ import Navbar from '../components/Navbar'
 import ProductCard from '../components/ProductCard'
 import supabase from '../supabase/client'
 import { useEffect, useState } from 'react'
+import { useAuth } from './auth';
 import { IconArrowUp } from '@tabler/icons-react';
 import { IconArrowDown } from '@tabler/icons-react';
 import { IconSortAZ } from '@tabler/icons-react';
@@ -14,6 +15,20 @@ import { useNavigate } from 'react-router-dom'
 // eslint-disable-next-line react/prop-types
 const Dashboard = () => {
 	const navigate = useNavigate();
+
+	const { isAuthenticated } = useAuth();
+	const [userData, setUserData] = useState(null);
+
+	useEffect(() => {
+		const fetchUserData = async () => {
+			const { data: { user } } = await supabase.auth.getUser();
+			setUserData(user);
+		};
+
+		if (isAuthenticated) {
+			fetchUserData();
+		}
+	}, [isAuthenticated]);
 
 	const [fetchError, setFetchError] = useState(null)
 	const [productos, setProductos] = useState(null)
@@ -59,13 +74,25 @@ const Dashboard = () => {
 	}, [orderBy, asc])
 
 	const handleLogOut = async () => {
-		sessionStorage.removeItem('token')
-		navigate('/landing')
+		const { error } = await supabase.auth.signOut();
+		if (error) {
+			console.error('Error al cerrar sesión:', error.message);
+		} else {
+			// Redirigir al usuario a la página de inicio o realizar otras acciones
+			console.log('Sesión cerrada correctamente');
+		}
+		navigate('/')
 	}
 
 	return (
 		<>
 			<Navbar />
+			{isAuthenticated && userData && (
+				<p>
+					Bienvenido, {`${userData.user_metadata.name} ${userData.user_metadata.apellido_P} ${userData.user_metadata.apellido_M}`}
+				</p>
+			)}
+
 			<div className="m-5 flex flex-col">
 
 				<section className=''>
