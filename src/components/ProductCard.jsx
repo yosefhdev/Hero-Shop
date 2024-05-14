@@ -5,6 +5,13 @@ import { useState, useRef } from 'react';
 import { IconTrash } from '@tabler/icons-react';
 import { IconPencil } from '@tabler/icons-react';
 import { IconX } from '@tabler/icons-react';
+import '../Dashboard.css';
+import logo from '../assets/logos/Hero-Shop-logo.webp';
+import { IconSearch } from '@tabler/icons-react';
+import { IconChartInfographic } from '@tabler/icons-react';
+import { IconEdit } from '@tabler/icons-react';
+import { IconStar } from '@tabler/icons-react';
+import { IconStarFilled } from '@tabler/icons-react';
 
 const ProductCard = ({ id, tipo, imagen, nombre, precio, descripccion, onDelete }) => {
 
@@ -47,34 +54,64 @@ const ProductCard = ({ id, tipo, imagen, nombre, precio, descripccion, onDelete 
 
     return (
         <>
-            {/* 2xl:w-1/6 xl:w-1/5 lg:w-1/4 md:w-1/3 sm:w-1/2 */}
-            <div className="w-full p-2 grid" onClick={handleClickOutside} >
+            <div className="card-product" onClick={handleClickOutside} >
+                        <div className="container-img">
+                            {/* Imagen del producto */}
+                            <img alt={descripccion} className="object-cover object-center w-full block" src={imagen} />
+                            {/* Descuento si está disponible */}
+		                    {/*discount && <span className="discount">{discount}</span>*/}
+                            {/* Botón de acción */}
+		                    <div className="button-group">
+                            <span>
+                            <IconChartInfographic className='Icon1' stroke={3} size={'2.3rem'} />
+		                	</span>
+                            </div>
 
-                <div className="p-2 flex flex-col justify-between bg-gray-100 rounded-xl">
-                    <div>
-                        <div className="flex h-48 overflow-hidden rounded-xl">
-                            <img alt={descripccion} className="object-cover object-center w-full block" src={imagen}/>
                         </div>
-                        <div className="flex flex-col mt-4 ">
-                            <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">{tipo}</h3>
-                            <h2 className="text-gray-900 title-font text-lg font-medium ">{nombre}</h2>
-                            <p className="mt-1">${precio}</p>
+                        <div className="content-card-product">
+                        {/*<div className="stars">
+			                 {stars.map((star, index) => (
+                             <span key={index} onMouseEnter={() => handleMouseEnter(index)} onMouseLeave={() => handleMouseLeave(index)}>
+                             {star ? <IconStarFilled size='1.7rem' className='SLlena'/> : <IconStar size='1.7rem' className='Ssin'/>}
+                             </span>
+			                 ))}
+		                </div>*/}
+                        
+                        {/* Nombre del producto */}
+                         <div className="producto info-container">
+                            <h2>{tipo}</h2>
+                            <div className='info-container'>
+                           
+	                	  <h3 className='name'>{nombre}</h3>
                         </div>
-                    </div>
-                    <div className="flex justify-end gap-x-1 mt-4">
-                        {/* Editar */}
-                        <Link to={'/edit-product/' + id}>
-                            <button className="bg-primary p-2 rounded-full h-min">
-                                <IconPencil className='size-5 text-white text-xl ' stroke={2} />
-                            </button>
-                        </Link>
-                        {/* Borrar */}
-                        <button className="bg-danger p-2 rounded-full h-min" id="deleteButton"
+                        <div className="actions-container">
+                           {/* Icono de edición y precio */}
+		                    <span className="editar-producto">
+                            <Link to={'/editar-producto/' + id}>
+                            <IconEdit className='Editar' stroke={2.4} size={'2rem'}> 
+                            </IconEdit>
+                            </Link>
+		                    </span>
+                            
+                             {/* Borrar */}
+                             
+                        <span className="borrar-producto" id="deleteButton"
                             onClick={openModal}>
-                            <IconTrash className="size-5 text-white text-xl " stroke={2} />
-                        </button>
-                    </div>
-                </div>
+                            <IconTrash className="Borrar" stroke={2.4} size={'2rem'}/>
+                            
+                        </span>
+                        <span><p className="price">${precio}</p></span>
+                        
+                        </div>
+                        </div>
+                        </div>
+
+                    
+
+                 
+                       
+        
+                
 
                 {/* <!-- Main modal --> */}
                 {showModal && (
