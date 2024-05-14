@@ -3,15 +3,10 @@ import { Link } from 'react-router-dom';
 import supabase from '../supabase/client';
 import { useState, useRef } from 'react';
 import { IconTrash } from '@tabler/icons-react';
-import { IconPencil } from '@tabler/icons-react';
 import { IconX } from '@tabler/icons-react';
 import '../Dashboard.css';
-import logo from '../assets/logos/Hero-Shop-logo.webp';
-import { IconSearch } from '@tabler/icons-react';
 import { IconChartInfographic } from '@tabler/icons-react';
 import { IconEdit } from '@tabler/icons-react';
-import { IconStar } from '@tabler/icons-react';
-import { IconStarFilled } from '@tabler/icons-react';
 
 const ProductCard = ({ id, tipo, imagen, nombre, precio, descripccion, onDelete }) => {
 
@@ -55,63 +50,63 @@ const ProductCard = ({ id, tipo, imagen, nombre, precio, descripccion, onDelete 
     return (
         <>
             <div className="card-product" onClick={handleClickOutside} >
-                        <div className="container-img">
-                            {/* Imagen del producto */}
-                            <img alt={descripccion} className="object-cover object-center w-full block" src={imagen} />
-                            {/* Descuento si está disponible */}
-		                    {/*discount && <span className="discount">{discount}</span>*/}
-                            {/* Botón de acción */}
-		                    <div className="button-group">
-                            <span>
+                <div className="container-img">
+                    {/* Imagen del producto */}
+                    <img alt={descripccion} className="object-cover object-center w-full block" src={imagen} />
+                    {/* Descuento si está disponible */}
+                    {/*discount && <span className="discount">{discount}</span>*/}
+                    {/* Botón de acción */}
+                    <div className="button-group">
+                        <span>
                             <IconChartInfographic className='Icon1' stroke={3} size={'2.3rem'} />
-		                	</span>
-                            </div>
+                        </span>
+                    </div>
 
-                        </div>
-                        <div className="content-card-product">
-                        {/*<div className="stars">
+                </div>
+                <div className="content-card-product">
+                    {/*<div className="stars">
 			                 {stars.map((star, index) => (
                              <span key={index} onMouseEnter={() => handleMouseEnter(index)} onMouseLeave={() => handleMouseLeave(index)}>
                              {star ? <IconStarFilled size='1.7rem' className='SLlena'/> : <IconStar size='1.7rem' className='Ssin'/>}
                              </span>
 			                 ))}
 		                </div>*/}
-                        
-                        {/* Nombre del producto */}
-                         <div className="producto info-container">
-                            <h2>{tipo}</h2>
-                            <div className='info-container'>
-                           
-	                	  <h3 className='name'>{nombre}</h3>
+
+                    {/* Nombre del producto */}
+                    <div className="producto info-container">
+                        <h2>{tipo}</h2>
+                        <div className='info-container'>
+
+                            <h3 className='name'>{nombre}</h3>
                         </div>
                         <div className="actions-container">
-                           {/* Icono de edición y precio */}
-		                    <span className="editar-producto">
-                            <Link to={'/editar-producto/' + id}>
-                            <IconEdit className='Editar' stroke={2.4} size={'2rem'}> 
-                            </IconEdit>
-                            </Link>
-		                    </span>
-                            
-                             {/* Borrar */}
-                             
-                        <span className="borrar-producto" id="deleteButton"
-                            onClick={openModal}>
-                            <IconTrash className="Borrar" stroke={2.4} size={'2rem'}/>
-                            
-                        </span>
-                        <span><p className="price">${precio}</p></span>
-                        
-                        </div>
-                        </div>
-                        </div>
+                            {/* Icono de edición y precio */}
+                            <span className="editar-producto">
+                                <Link to={'/edit-product/' + id}>
+                                    <IconEdit className='Editar' stroke={2.4} size={'2rem'}>
+                                    </IconEdit>
+                                </Link>
+                            </span>
 
-                    
+                            {/* Borrar */}
 
-                 
-                       
-        
-                
+                            <span className="borrar-producto" id="deleteButton"
+                                onClick={openModal}>
+                                <IconTrash className="Borrar" stroke={2.4} size={'2rem'} />
+
+                            </span>
+                            <span><p className="price">${precio}</p></span>
+
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
+
 
                 {/* <!-- Main modal --> */}
                 {showModal && (
