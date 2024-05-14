@@ -402,4 +402,4 @@ const handleFilterByCategory = async (category) => {
 	)
 }
 
-export default Dashboard
+  export default Dashboard 
