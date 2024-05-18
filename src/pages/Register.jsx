@@ -12,8 +12,7 @@ const Register = () => {
 		password: '',
 		password_confirmation: ''
 	})
-
-	console.log(formData)
+	const [errors, setErrors] = useState({});
 
 	function handleChange(event) {
 		setFormData((prevFormData) => {
@@ -22,31 +21,97 @@ const Register = () => {
 				[event.target.name]: event.target.value
 			}
 		})
-		console.log(formData)
 	}
 
+	const validateFields = () => {
+		const newErrors = {};
+
+		// Validar nombre
+		if (!formData.nombre.trim()) {
+			newErrors.nombre = 'El nombre es obligatorio';
+		}
+
+		// Validar apellido paterno
+		if (!formData.apellido_paterno.trim()) {
+			newErrors.apellido_paterno = 'El apellido paterno es obligatorio';
+		}
+
+		// Validar correo electrónico
+		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+		if (!emailRegex.test(formData.correo)) {
+			newErrors.correo = 'Ingrese un correo electrónico válido';
+		}
+
+		// Validar contraseña
+		if (formData.password.length < 8) {
+			newErrors.password = 'La contraseña debe tener al menos 8 caracteres';
+		}
+
+		// Validar confirmación de contraseña
+		if (formData.password !== formData.password_confirmation) {
+			newErrors.password_confirmation = 'Las contraseñas no coinciden';
+		}
+
+		return newErrors;
+	};
+
 	async function handleSubmit(e) {
-		e.preventDefault()
-		try {
-			const { error } = await supabase.auth.signUp(
-				{
+		e.preventDefault();
+
+		console.log('formData', formData);
+	
+
+		const errors = validateFields();
+		setErrors(errors);
+
+		if (Object.keys(errors).length === 0) {
+			try {
+				// Registrar al usuario con Supabase Auth
+				const { data, error: signUpError } = await supabase.auth.signUp({
 					email: formData.correo,
 					password: formData.password,
 					options: {
 						data: {
 							name: formData.nombre,
 							apellido_P: formData.apellido_paterno,
-							apellido_M: formData.apellido_materno
-						}
-					}
-				}
-			)
-			if (error) {
-				console.error('Error al registrar:', error.message);
-			}
+							apellido_M: formData.apellido_materno,
+							rol: 'cliente'
+						},
+					},
+				});
 
-		} catch (error) {
-			console.log('error', error)
+				if (signUpError) {
+					console.error('Error al registrar:', signUpError.message);
+				} else if (data) {
+					// Verificar si se obtuvo un usuario
+					// Insertar el usuario en la tabla 'usuarios'
+
+					const { error: insertError } = await supabase
+						.from('usuarios')
+						.insert([
+							{
+								auth_id: data.id,
+								email: formData.correo,
+								pass: formData.password,
+								nombre: formData.nombre,
+								apellido_paterno: formData.apellido_paterno,
+								apellido_materno: formData.apellido_materno,
+								rol: 2, // Rol por defecto: cliente
+							},
+						])
+						.select();
+
+					if (insertError) {
+						console.error('Error al insertar en la tabla usuarios:', insertError.message);
+					} else {
+						console.log('Usuario registrado y guardado correctamente');
+					}
+				} else {
+					console.error('No se obtuvo un usuario después del registro');
+				}
+			} catch (error) {
+				console.log('error', error);
+			}
 		}
 	}
 
@@ -59,31 +124,45 @@ const Register = () => {
 				<div className="flex">
 					<div className="bg-white rounded-lg shadow-md p-10">
 						<h2 className="text-2xl font-semibold text-center text-blue-600 mb-8">Registrarse</h2>
+
 						<form className="w-72" onSubmit={handleSubmit}>
 							<input type="text" placeholder="Nombre" className="px-2 py-1 mb-4 block w-full border-b-2 border-gray-300 focus:outline-none focus:border-blue-600"
 								name="nombre"
 								onChange={handleChange} />
+							{errors.nombre && <p className="text-red-500 text-xs">{errors.nombre}</p>}
+
 							<input type="text" placeholder="Apellido Paterno" className="px-2 py-1 mb-4 block w-full border-b-2 border-gray-300 focus:outline-none focus:border-blue-600"
 								name="apellido_paterno"
 								onChange={handleChange} />
+							{errors.apellido_paterno && <p className="text-red-500 text-xs">{errors.nombre}</p>}
+
 							<input type="text" placeholder="Apellido Materno" className="px-2 py-1 mb-4 block w-full border-b-2 border-gray-300 focus:outline-none focus:border-blue-600"
 								name="apellido_materno"
 								onChange={handleChange} />
+							{errors.apellido_materno && <p className="text-red-500 text-xs">{errors.nombre}</p>}
+
 							<input type="email" placeholder="Correo" className="px-2 py-1 mb-4 block w-full border-b-2 border-gray-300 focus:outline-none focus:border-blue-600"
 								name="correo"
 								onChange={handleChange} />
+							{errors.correo && <p className="text-red-500 text-xs">{errors.nombre}</p>}
+
 							<input type="password" placeholder="Contraseña" className="px-2 py-1 mb-4 block w-full border-b-2 border-gray-300 focus:outline-none focus:border-blue-600"
 								name="password"
 								onChange={handleChange} />
+							{errors.password && <p className="text-red-500 text-xs">{errors.nombre}</p>}
+
 							<input type="password" placeholder="Confirma contraseña" className="px-2 py-1 mb-6 block w-full border-b-2 border-gray-300 focus:outline-none focus:border-blue-600"
 								name="password_confirmation"
 								onChange={handleChange} />
+							{errors.password_confirmation && <p className="text-red-500 text-xs">{errors.nombre}</p>}
+
 							<input type="submit" className="bg-blue-600 text-white font-semibold py-2 px-4 rounded-full w-full" />
 							Ya tienes una cuenta? &nbsp;
 							<Link to={'/login'} className="text-primary hover:border-b hover:border-primary">
 								Iniciar Sesion
 							</Link>
 						</form>
+
 					</div>
 				</div>
 			</div>
