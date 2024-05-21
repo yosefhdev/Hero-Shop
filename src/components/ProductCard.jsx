@@ -4,8 +4,6 @@ import supabase from '../supabase/client';
 import { useState, useRef } from 'react';
 import { IconTrash } from '@tabler/icons-react';
 import { IconX } from '@tabler/icons-react';
-import logo from '../assets/logos/Hero-Shop-logo.webp';
-import { IconSearch } from '@tabler/icons-react';
 import { IconChartInfographic } from '@tabler/icons-react';
 import { IconEdit } from '@tabler/icons-react';
 
@@ -50,28 +48,28 @@ const ProductCard = ({ id, tipo, imagen, nombre, precio, descripccion, onDelete 
             closeModal();
         }
 
-   
-            
-        
+
+
+
     };
 
     return (
         <>
             <div className="relative bg-[color:var(--primary-color)] cursor-pointer shadow-[0_0_2px_rgba(0,0,0,0.1)] px-12 py-8 rounded-lg group" onClick={handleClickOutside} >
-                            {/* Imagen del producto */}
-                            <img alt={descripccion} className="object-cover object-center w-full block h-80 " src={imagen} />
-                            {/* Descuento si está disponible */}
-		                    {/*discount && <span className="absolute bg-[color:var(--red-color)] text-white text-[1.2rem] px-[1.2rem] py-0.5 rounded-2xl left-0 hover:bg-[color:var(--Blue-label-de-jonny-walker)]">{discount}</span>*/}
-                            {/* Botón de acción */}
-		                    <div className="flex flex-col gap-4 absolute right-[-3rem] z-0 transition-all duration-[0.4s] ease-[ease] top-5 opacity-0 group-hover:opacity-100 group-hover:right-5">
-                            <span className='border border-[color:var(--background-color)] flex items-center justify-center cursor-pointer transition-all duration-[0.4s] ease-[ease] p-[0.8rem] rounded-[50%] border-solid hover:bg-[color:var(--background-color)]' onMouseLeave={() => setHovered3(false)} onMouseEnter={() => setHovered3(true)}>
-                            <IconChartInfographic  style={{ color: hovered3 ? 'var(--Blue-label-de-jonny-walker)' : 'var(--background-color)' }}  stroke={3} size={'2.3rem'} />
-		                	</span>
-                            </div>
+                {/* Imagen del producto */}
+                <img alt={descripccion} className="object-cover object-center w-full block h-80 " src={imagen} />
+                {/* Descuento si está disponible */}
+                {/*discount && <span className="absolute bg-[color:var(--red-color)] text-white text-[1.2rem] px-[1.2rem] py-0.5 rounded-2xl left-0 hover:bg-[color:var(--Blue-label-de-jonny-walker)]">{discount}</span>*/}
+                {/* Botón de acción */}
+                <div className="flex flex-col gap-4 absolute right-[-3rem] z-0 transition-all duration-[0.4s] ease-[ease] top-5 opacity-0 group-hover:opacity-100 group-hover:right-5">
+                    <span className='border border-[color:var(--background-color)] flex items-center justify-center cursor-pointer transition-all duration-[0.4s] ease-[ease] p-[0.8rem] rounded-[50%] border-solid hover:bg-[color:var(--background-color)]' onMouseLeave={() => setHovered3(false)} onMouseEnter={() => setHovered3(true)}>
+                        <IconChartInfographic style={{ color: hovered3 ? 'var(--Blue-label-de-jonny-walker)' : 'var(--background-color)' }} stroke={3} size={'2.3rem'} />
+                    </span>
+                </div>
 
-                 
-                        
-{/*   <div className="card-product" onClick={handleClickOutside} >
+
+
+                {/*   <div className="card-product" onClick={handleClickOutside} >
                         <div className="container-img">
                             <img alt={descripccion} className="object-cover object-center w-full block" src={imagen} />
 		                    <div className="button-group">
@@ -86,48 +84,48 @@ const ProductCard = ({ id, tipo, imagen, nombre, precio, descripccion, onDelete 
 
 
 
-                        {/*justify-items-center grid-cols-[1fr_1fr] grid-rows-[repeat(4,main-content)] gap-y-4*/}
-                        <div className="bg-[color:var(--primary-color)] cursor-pointer shadow-[0_0_2px_rgba(0,0,0,0.1)] px-3 py-3 rounded-lg">
-                        {/*<div className="stars">
+                {/*justify-items-center grid-cols-[1fr_1fr] grid-rows-[repeat(4,main-content)] gap-y-4*/}
+                <div className="bg-[color:var(--primary-color)] cursor-pointer shadow-[0_0_2px_rgba(0,0,0,0.1)] px-3 py-3 rounded-lg">
+                    {/*<div className="stars">
 			                 {stars.map((star, index) => (
                              <span key={index} onMouseEnter={() => handleMouseEnter(index)} onMouseLeave={() => handleMouseLeave(index)}>
                              {star ? <IconStarFilled size='1.7rem' className='SLlena'/> : <IconStar size='1.7rem' className='Ssin'/>}
                              </span>
 			                 ))}
 		                </div>*/}
-                        
-                        {/* Nombre del producto */}
-                        {/*flex items-center justify-between w-full*/}
-                        {/* <div className="w-full">*/}
-                            <h2 className='row-[2/3] col-[1/-1] font-semibold text-[1.2rem] cursor-pointer text-[color:var(--background-color)] text-center w-full'>{tipo}</h2>
-                            <div className='grow'>
-                           
-	                	  <h3 className='row-[2/3] col-[1/-1] font-normal text-[1.6rem] cursor-pointer text-[color:var(--background-color)] text-center mb-4 hover:text-[color:var(--Blue-label-de-jonny-walker)] hover:text-center'>{nombre}</h3>
-                        </div>
-                        <div className="flex items-center">
-                           {/* Icono de edición y precio */}
-		                    <span className="border-[color:var(--background-color)] cursor-pointer transition-all duration-[0.4s] ease-[ease] flex items-center justify-center mr-[15%] p-4 rounded-[50%] border-2 border-solid hover:bg-[color:var(--background-color)]"   onMouseEnter={() => setHovered(true)}
+
+                    {/* Nombre del producto */}
+                    {/*flex items-center justify-between w-full*/}
+                    {/* <div className="w-full">*/}
+                    <h2 className='row-[2/3] col-[1/-1] font-semibold text-[1.2rem] cursor-pointer text-[color:var(--background-color)] text-center w-full'>{tipo}</h2>
+                    <div className='grow'>
+
+                        <h3 className='row-[2/3] col-[1/-1] font-normal text-[1.6rem] cursor-pointer text-[color:var(--background-color)] text-center mb-4 hover:text-[color:var(--Blue-label-de-jonny-walker)] hover:text-center'>{nombre}</h3>
+                    </div>
+                    <div className="flex items-center">
+                        {/* Icono de edición y precio */}
+                        <span className="border-[color:var(--background-color)] cursor-pointer transition-all duration-[0.4s] ease-[ease] flex items-center justify-center mr-[15%] p-4 rounded-[50%] border-2 border-solid hover:bg-[color:var(--background-color)]" onMouseEnter={() => setHovered(true)}
                             onMouseLeave={() => setHovered(false)}>
                             <Link to={'/create-product/' + id}>
-                            <IconEdit      className="transition-colors duration-300"
- style={{ color: hovered ? 'var(--Blue-label-de-jonny-walker)' : 'var(--background-color)' }} stroke={2} size={'2rem'}> 
-                            </IconEdit>
+                                <IconEdit className="transition-colors duration-300"
+                                    style={{ color: hovered ? 'var(--Blue-label-de-jonny-walker)' : 'var(--background-color)' }} stroke={2} size={'2rem'}>
+                                </IconEdit>
                             </Link>
-		                    </span>
-                            
-                             {/* Borrar */}
-                             
-                        <span className="border-[color:var(--background-color)] cursor-pointer transition-all duration-[0.4s] ease-[ease] flex items-center justify-center mr-[15%] p-4 rounded-[50%] border-2 border-solid hover:bg-[color:var(--background-color)]"  id="deleteButton" onMouseEnter={() => setHovered2(true)}
+                        </span>
+
+                        {/* Borrar */}
+
+                        <span className="border-[color:var(--background-color)] cursor-pointer transition-all duration-[0.4s] ease-[ease] flex items-center justify-center mr-[15%] p-4 rounded-[50%] border-2 border-solid hover:bg-[color:var(--background-color)]" id="deleteButton" onMouseEnter={() => setHovered2(true)}
                             onClick={openModal} onMouseLeave={() => setHovered2(false)}>
-                            <IconTrash   className="transition-colors duration-300"
- style={{ color: hovered2 ? 'var(--Blue-label-de-jonny-walker)' : 'var(--background-color)' }}  stroke={2.4} size={'2rem'}/>
-                            
+                            <IconTrash className="transition-colors duration-300"
+                                style={{ color: hovered2 ? 'var(--Blue-label-de-jonny-walker)' : 'var(--background-color)' }} stroke={2.4} size={'2rem'} />
+
                         </span>
                         <span className='flex items-center justify-center mr-[15%]'><p className="text-[color:var(--Orange-color)] mr-[0%] justify-self-end self-center text-[1.7rem] font-semibold ">${precio}</p></span>
                         {/*Pare poner linea al precio text-[1.5_rem] font-normal line-through*/}
-                        </div>
-                        {/*</div>*/}
-                        </div>
+                    </div>
+                    {/*</div>*/}
+                </div>
 
 
 
