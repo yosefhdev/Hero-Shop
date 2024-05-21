@@ -34,7 +34,7 @@ const Login = () => {
 			} else {
 				// navigate('/dashboard')
 				// Redirigir al usuario a la página anterior o a la ruta deseada
-				const from = location.state?.from?.pathname || '/dashboard';
+				const from = location.state?.from?.pathname || '/';
 				navigate(from, { replace: true });
 			}
 
