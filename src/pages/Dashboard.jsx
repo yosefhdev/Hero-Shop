@@ -1,5 +1,3 @@
-import Title from '../components/Title'
-import Navbar from '../components/Navbar'
 import ProductCard from '../components/ProductCard'
 import supabase from '../supabase/client'
 import { useEffect, useState } from 'react'
@@ -20,6 +18,8 @@ import { IconBrandMeta } from '@tabler/icons-react';
 import { IconBrandXdeep } from '@tabler/icons-react';
 import { IconBrandInstagram } from '@tabler/icons-react';
 import { IconLetterJSmall } from '@tabler/icons-react';
+import { IconLogout } from '@tabler/icons-react';
+
 // eslint-disable-next-line react/prop-types
 const Dashboard = () => {
 	const navigate = useNavigate();
@@ -36,12 +36,13 @@ const Dashboard = () => {
 		if (isAuthenticated) {
 			fetchUserData();
 		}
-	}, [isAuthenticated]);
+	}, [isAuthenticated, userData]);
 
 	const [fetchError, setFetchError] = useState(null)
 	const [productos, setProductos] = useState(null)
 	const [orderBy, setOrderBy] = useState('created_at')
 	const [asc, setAsc] = useState(true)
+	const [articulo, setArticulo] = useState('')
 
 	const handleDelete = (id) => {
 		setProductos(productoAnterior => {
@@ -81,6 +82,7 @@ const Dashboard = () => {
 
 	}, [orderBy, asc])
 
+	// eslint-disable-next-line no-unused-vars
 	const handleLogOut = async () => {
 		const { error } = await supabase.auth.signOut();
 		if (error) {
@@ -91,12 +93,14 @@ const Dashboard = () => {
 		}
 		navigate('/')
 	}
+
 	const handleArticulo = (e) => {
 		e.preventDefault()
 		setArticulo(e.target.value)
 
 		fetchSingleProducts()
 	}
+
 	const fetchSingleProducts = async () => {
 		const { data, error } = await supabase
 			.from('productos')
@@ -122,33 +126,33 @@ const Dashboard = () => {
 			setFetchError(null)
 		}
 	}
-/* SELECCIONAR SOLO POR CATEGORIA*/
-const handleFilterByCategory = async (category) => {
-    // Aquí debes adaptar la lógica para obtener los productos de una categoría específica
-    const { data, error } = await supabase
-        .from('productos')
-        .select()
-        .eq('categoria', category)
-        .order(orderBy, { ascending: asc });
+	/* SELECCIONAR SOLO POR CATEGORIA*/
+	const handleFilterByCategory = async (category) => {
+		// Aquí debes adaptar la lógica para obtener los productos de una categoría específica
+		const { data, error } = await supabase
+			.from('productos')
+			.select()
+			.eq('categoria', category)
+			.order(orderBy, { ascending: asc });
 
-    if (error) {
-        setFetchError("Error al cargar los productos");
-        console.error('error', error);
-        setProductos(null);
-    }
+		if (error) {
+			setFetchError("Error al cargar los productos");
+			console.error('error', error);
+			setProductos(null);
+		}
 
-    if (data.length <= 0) {
-        setFetchError("No se encontraron productos en esa categoría");
-        setProductos(null);
-    }
+		if (data.length <= 0) {
+			setFetchError("No se encontraron productos en esa categoría");
+			setProductos(null);
+		}
 
-    if (data && data.length > 0) {
-        setProductos(data);
-        setFetchError(null);
-    }
-}
+		if (data && data.length > 0) {
+			setProductos(data);
+			setFetchError(null);
+		}
+	}
 
-/*Prueba categoria elementos*/
+	/*Prueba categoria elementos*/
 
 	return (
 		<>
@@ -174,7 +178,7 @@ const handleFilterByCategory = async (category) => {
         /* Define otros estilos globales */
       `}
     </style>
-<body >
+<body>
         <header>
           <div className="bg-[color:var(--background-color)]">
             <div className="flex justify-between items-center ml-20 px-0 py-[0.3rem]">
@@ -419,14 +423,11 @@ const handleFilterByCategory = async (category) => {
             </div>
 			
 
-			
-		</div>
-	</div>
+			</div></div>
 
 </body>
-
 		</>
 	)
 }
 
-  export default Dashboard 
+export default Dashboard 

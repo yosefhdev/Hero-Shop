@@ -3,14 +3,11 @@ import { Link } from 'react-router-dom';
 import supabase from '../supabase/client';
 import { useState, useRef } from 'react';
 import { IconTrash } from '@tabler/icons-react';
-import { IconPencil } from '@tabler/icons-react';
 import { IconX } from '@tabler/icons-react';
 import logo from '../assets/logos/Hero-Shop-logo.webp';
 import { IconSearch } from '@tabler/icons-react';
 import { IconChartInfographic } from '@tabler/icons-react';
 import { IconEdit } from '@tabler/icons-react';
-import { IconStar } from '@tabler/icons-react';
-import { IconStarFilled } from '@tabler/icons-react';
 
 const ProductCard = ({ id, tipo, imagen, nombre, precio, descripccion, onDelete }) => {
     const [hovered, setHovered] = useState(false);
@@ -80,8 +77,8 @@ const ProductCard = ({ id, tipo, imagen, nombre, precio, descripccion, onDelete 
 		                    <div className="button-group">
                             <span>
                             <IconChartInfographic className='Icon1' stroke={3} size={'2.3rem'} />
-		                	</span>
-                            </div>
+                        </span>
+                    </div>
 
                         </div>
 */}
@@ -132,12 +129,7 @@ const ProductCard = ({ id, tipo, imagen, nombre, precio, descripccion, onDelete 
                         {/*</div>*/}
                         </div>
 
-                    
 
-                 
-                       
-        
-                
 
                 {/* <!-- Main modal --> */}
                 {showModal && (
