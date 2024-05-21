@@ -108,7 +108,7 @@ const ProductCard = ({ id, tipo, imagen, nombre, precio, descripccion, onDelete 
                            {/* Icono de edición y precio */}
 		                    <span className="border-[color:var(--background-color)] cursor-pointer transition-all duration-[0.4s] ease-[ease] flex items-center justify-center mr-[15%] p-4 rounded-[50%] border-2 border-solid hover:bg-[color:var(--background-color)]"   onMouseEnter={() => setHovered(true)}
                             onMouseLeave={() => setHovered(false)}>
-                            <Link to={'/create-product/' + id}>
+                            <Link to={'/edit-product/' + id}>
                             <IconEdit      className="transition-colors duration-300"
  style={{ color: hovered ? 'var(--Blue-label-de-jonny-walker)' : 'var(--background-color)' }} stroke={2} size={'2rem'}> 
                             </IconEdit>
