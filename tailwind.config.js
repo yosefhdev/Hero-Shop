@@ -13,6 +13,7 @@ export default {
         warning: '#F5AF36',
         info: '#21BFE2',
         'dark-blue': '#251D4E',
+
       },
     },
   },
