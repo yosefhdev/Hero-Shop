@@ -11,6 +11,7 @@ import NotFoundPage from './pages/NotFoundPage';
 import AccessDeniedPage from './pages/AccessDeniedPage';
 import { useAuth } from './pages/auth';
 import ProtectedRoute from './components/ProtectedRoute';
+
 // import Navbar from "./components/Navbar";
 
 function App() {

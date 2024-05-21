@@ -269,21 +269,15 @@ const EditProduct = () => {
 								/>
 							</div>
 							<div className="flex justify-between">
-								<button
-									type="submit"
-									className="border border-black rounded-md px-4 py-2 flex items-center"
-								>
-									<IconPencil stroke={2} className="mr-1 -ml-1" />
-									Actualizar
-								</button>
+								<button type="submit" className="flex items-center px-4 py-2 border-2 border-black rounded bg-blue-500 text-white hover:bg-blue-600 transition-colors duration-200">
+              <IconPencil stroke={2} className="mr-1" />
+              Actualizar
+            </button>
 								<Link to="/dashboard">
-									<button
-										type="button"
-										className="border border-black rounded-md px-4 py-2 flex items-center"
-									>
-										<IconX stroke={2} className="mr-1 -ml-1" />
-										Cancelar
-									</button>
+                <button type="button" className="flex items-center px-4 py-2 border-2 border-black rounded bg-red-500 text-white hover:bg-red-600 transition-colors duration-200">
+                <IconX stroke={2} className="mr-1" />
+                Cancelar
+              </button>
 								</Link>
 							</div>
 							{formError && <p className="">{formError}</p>}
