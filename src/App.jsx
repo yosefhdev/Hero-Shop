@@ -10,6 +10,7 @@ import EditProduct from './pages/EditProduct';
 import NotFoundPage from './pages/NotFoundPage';
 import { useAuth } from './pages/auth';
 import ProtectedRoute from './components/ProtectedRoute';
+
 // import Navbar from "./components/Navbar";
 
 function App() {
