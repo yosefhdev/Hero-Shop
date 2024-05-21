@@ -17,6 +17,8 @@ import { IconBrandMeta } from '@tabler/icons-react';
 import { IconBrandXdeep } from '@tabler/icons-react';
 import { IconBrandInstagram } from '@tabler/icons-react';
 import { IconLetterJSmall } from '@tabler/icons-react';
+import { IconLogout } from '@tabler/icons-react';
+
 // eslint-disable-next-line react/prop-types
 const Dashboard = () => {
 	const navigate = useNavigate();
@@ -33,7 +35,7 @@ const Dashboard = () => {
 		if (isAuthenticated) {
 			fetchUserData();
 		}
-	}, [isAuthenticated]);
+	}, [isAuthenticated, userData]);
 
 	const [fetchError, setFetchError] = useState(null)
 	const [productos, setProductos] = useState(null)
@@ -153,21 +155,27 @@ const Dashboard = () => {
 
 	return (
 		<>
-			<body>
+			<div >
 				<header>
 					<div className="container-hero">
 						<div className="hero">
 							<div className="container-logo" >
 								<Link to="/" className="flex items-center">
 									<img src={logo} className="rounded-full mr-3 h-6 sm:h-9" alt="Flowbite Logo" /></Link>
-								<h1 className="logo"><a href="/">Hero-shop Administrador</a></h1>
+								<h1 className="logo"><a href="/">Hero-shop Admin</a></h1>
 							</div>
 							<div className="container-user">
 
 								{isAuthenticated && userData && (
-									<p>
-										<a>Bienvenido, {`${userData.user_metadata.name} ${userData.user_metadata.apellido_P} ${userData.user_metadata.apellido_M}`} </a>
-									</p>
+									<div className='grid grid-flow-col gap-1'>
+										<p>
+											<a>Bienvenido, {`${userData.user_metadata.name} `} </a>
+										</p>
+										<button onClick={handleLogOut}>
+											<IconLogout stroke={2} className='text-primary' />
+										</button>
+									</div>
+
 								)}
 								<IconUserCircle stroke={1.5} size={65} style={{ color: 'var(--primary-color)', margin: '-.9rem -.1rem', paddingRight: '2rem', paddingLeft: '.7rem' }} />
 
@@ -401,7 +409,7 @@ const Dashboard = () => {
 					</div>
 				</div>
 
-			</body>
+			</div>
 
 		</>
 	)

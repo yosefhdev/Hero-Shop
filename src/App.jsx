@@ -8,6 +8,7 @@ import Dashboard from './pages/Dashboard';
 import CreateProduct from './pages/CreateProduct';
 import EditProduct from './pages/EditProduct';
 import NotFoundPage from './pages/NotFoundPage';
+import AccessDeniedPage from './pages/AccessDeniedPage';
 import { useAuth } from './pages/auth';
 import ProtectedRoute from './components/ProtectedRoute';
 
@@ -31,7 +32,7 @@ function App() {
           <Route
             path="/dashboard"
             element={
-              <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <ProtectedRoute isAuthenticated={isAuthenticated} isAdmin={true}>
                 <Dashboard />
               </ProtectedRoute>
             }
@@ -39,7 +40,7 @@ function App() {
           <Route
             path="/create-product"
             element={
-              <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <ProtectedRoute isAuthenticated={isAuthenticated} isAdmin={true}>
                 <CreateProduct />
               </ProtectedRoute>
             }
@@ -47,17 +48,16 @@ function App() {
           <Route
             path="/edit-product/:id"
             element={
-              <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <ProtectedRoute isAuthenticated={isAuthenticated} isAdmin={true}>
                 <EditProduct />
               </ProtectedRoute>
             }
           />
+          <Route path="/access-denied" element={<AccessDeniedPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </BrowserRouter>
     </>
   )
 }
-
-
 export default App
