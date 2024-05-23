@@ -1,20 +1,11 @@
-import Title from '../components/Title'
-import Navbar from '../components/Navbar'
-import ProductCard from '../components/ProductCard'
+
 import supabase from '../supabase/client'
 import { useEffect, useState } from 'react'
 import { useAuth } from './auth';
-import { IconArrowUp, IconBackground } from '@tabler/icons-react';
-import { IconArrowDown } from '@tabler/icons-react';
-import { IconSortAZ } from '@tabler/icons-react';
-import { IconClock } from '@tabler/icons-react';
-import { IconCoin } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom'
-import React from 'react';
+import { IconUserCircle } from '@tabler/icons-react';
 
-import { IconUser, IconUserCircle } from '@tabler/icons-react';
 import logo from '../assets/logos/Hero-Shop-logo.webp';
-import { IconSearch } from '@tabler/icons-react';
 import { Link } from "react-router-dom";
 import { IconBrandMeta } from '@tabler/icons-react';
 import { IconBrandXdeep } from '@tabler/icons-react';
@@ -38,48 +29,48 @@ const Dashboard = () => {
 		}
 	}, [isAuthenticated]);
 
-	const [fetchError, setFetchError] = useState(null)
-	const [productos, setProductos] = useState(null)
-	const [orderBy, setOrderBy] = useState('created_at')
-	const [asc, setAsc] = useState(true)
+	// const [fetchError, setFetchError] = useState(null)
+	// const [productos, setProductos] = useState(null)
+	// const [orderBy, setOrderBy] = useState('created_at')
+	// const [asc, setAsc] = useState(true)
 
-	const handleDelete = (id) => {
-		setProductos(productoAnterior => {
-			return productoAnterior.filter(producto => producto.id !== id)
-		})
-	}
+	// const handleDelete = (id) => {
+	// 	setProductos(productoAnterior => {
+	// 		return productoAnterior.filter(producto => producto.id !== id)
+	// 	})
+	// }
 
-	const handleOrder = (order) => {
-		if (orderBy === order) {
-			setAsc(!asc)
-		} else {
-			setOrderBy(order)
-			setAsc(true)
-		}
-	}
+	// const handleOrder = (order) => {
+	// 	if (orderBy === order) {
+	// 		setAsc(!asc)
+	// 	} else {
+	// 		setOrderBy(order)
+	// 		setAsc(true)
+	// 	}
+	// }
 
-	useEffect(() => {
-		const fetchProducts = async () => {
-			const { data, error } = await supabase
-				.from('productos')
-				.select()
-				.order(orderBy, { ascending: asc })
+	// useEffect(() => {
+	// 	const fetchProducts = async () => {
+	// 		const { data, error } = await supabase
+	// 			.from('productos')
+	// 			.select()
+	// 			.order(orderBy, { ascending: asc })
 
-			if (error) {
-				setFetchError("Error al cargar los productos")
-				console.log('error', error)
-				setProductos(null)
-			}
+	// 		if (error) {
+	// 			setFetchError("Error al cargar los productos")
+	// 			console.log('error', error)
+	// 			setProductos(null)
+	// 		}
 
-			if (data) {
-				setProductos(data)
-				setFetchError(null)
-			}
-		}
+	// 		if (data) {
+	// 			setProductos(data)
+	// 			setFetchError(null)
+	// 		}
+	// 	}
 
-		fetchProducts()
+	// 	fetchProducts()
 
-	}, [orderBy, asc])
+	// }, [orderBy, asc])
 
 	const handleLogOut = async () => {
 		const { error } = await supabase.auth.signOut();
@@ -91,62 +82,62 @@ const Dashboard = () => {
 		}
 		navigate('/')
 	}
-	const handleArticulo = (e) => {
-		e.preventDefault()
-		setArticulo(e.target.value)
+	// const handleArticulo = (e) => {
+	// 	e.preventDefault()
+	// 	setArticulo(e.target.value)
 
-		fetchSingleProducts()
-	}
-	const fetchSingleProducts = async () => {
-		const { data, error } = await supabase
-			.from('productos')
-			.select()
-			.order(orderBy, { ascending: asc })
-			.ilike('nombre', `%${articulo}%`, {
-				type: 'websearch'
-			})
+	// 	fetchSingleProducts()
+	// }
+	// const fetchSingleProducts = async () => {
+	// 	const { data, error } = await supabase
+	// 		.from('productos')
+	// 		.select()
+	// 		.order(orderBy, { ascending: asc })
+	// 		.ilike('nombre', `%${articulo}%`, {
+	// 			type: 'websearch'
+	// 		})
 
-		if (error) {
-			setFetchError("Error al cargar los productos")
-			console.log('error', error)
-			setProductos(null)
-		}
+	// 	if (error) {
+	// 		setFetchError("Error al cargar los productos")
+	// 		console.log('error', error)
+	// 		setProductos(null)
+	// 	}
 
-		if (data.length <= 0) {
-			setFetchError("No se encontraron productos con ese nombre")
-			setProductos(null)
-		}
+	// 	if (data.length <= 0) {
+	// 		setFetchError("No se encontraron productos con ese nombre")
+	// 		setProductos(null)
+	// 	}
 
-		if (data && data.length > 0) {
-			setProductos(data)
-			setFetchError(null)
-		}
-	}
-	/* SELECCIONAR SOLO POR CATEGORIA*/
-	const handleFilterByCategory = async (category) => {
-		// Aquí debes adaptar la lógica para obtener los productos de una categoría específica
-		const { data, error } = await supabase
-			.from('productos')
-			.select()
-			.eq('categoria', category)
-			.order(orderBy, { ascending: asc });
+	// 	if (data && data.length > 0) {
+	// 		setProductos(data)
+	// 		setFetchError(null)
+	// 	}
+	// }
+	// /* SELECCIONAR SOLO POR CATEGORIA*/
+	// const handleFilterByCategory = async (category) => {
+	// 	// Aquí debes adaptar la lógica para obtener los productos de una categoría específica
+	// 	const { data, error } = await supabase
+	// 		.from('productos')
+	// 		.select()
+	// 		.eq('categoria', category)
+	// 		.order(orderBy, { ascending: asc });
 
-		if (error) {
-			setFetchError("Error al cargar los productos");
-			console.error('error', error);
-			setProductos(null);
-		}
+	// 	if (error) {
+	// 		setFetchError("Error al cargar los productos");
+	// 		console.error('error', error);
+	// 		setProductos(null);
+	// 	}
 
-		if (data.length <= 0) {
-			setFetchError("No se encontraron productos en esa categoría");
-			setProductos(null);
-		}
+	// 	if (data.length <= 0) {
+	// 		setFetchError("No se encontraron productos en esa categoría");
+	// 		setProductos(null);
+	// 	}
 
-		if (data && data.length > 0) {
-			setProductos(data);
-			setFetchError(null);
-		}
-	}
+	// 	if (data && data.length > 0) {
+	// 		setProductos(data);
+	// 		setFetchError(null);
+	// 	}
+	// }
 
 	/*Prueba categoria elementos*/
 
@@ -174,7 +165,9 @@ const Dashboard = () => {
 					/* Define otros estilos globales */
       			`}
 			</style>
-			<body >
+			<
+
+				>
 				<header>
 					<div className="bg-[color:var(--background-color)]">
 						<div className="flex justify-between items-center ml-20 px-0 py-[0.3rem]">
@@ -386,7 +379,7 @@ const Dashboard = () => {
 					</div>
 				</div>
 
-			</body>
+			</>
 
 		</>
 	)

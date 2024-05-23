@@ -7,7 +7,6 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import CreateProduct from './pages/CreateProduct';
 import CreateCategory from './pages/CreateCategory';
-import CreateCategory from './pages/CreateCategory';
 import EditProduct from './pages/EditProduct';
 import NotFoundPage from './pages/NotFoundPage';
 import AccessDeniedPage from './pages/AccessDeniedPage';

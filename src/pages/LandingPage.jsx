@@ -215,34 +215,6 @@ const LandingPage = () => {
 
 					</div>
 				</section>
-				{/* Banner 
-
-			<section id="banner" className="max-w-7xl mx-auto min-h-[150px] bg-blue-900  overflow-hidden relative">
-      <div className="flex justify-center items-center h-full overflow-hidden">
-        <div className="max-w-6xl mx-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 w-full h-full">
-          <div className="relative overflow-hidden rounded-lg transform transition-transform duration-300 hover:scale-110">
-            <img src="https://c4.wallpaperflare.com/wallpaper/295/163/719/anime-anime-boys-picture-in-picture-kimetsu-no-yaiba-kamado-tanjir%C5%8D-hd-wallpaper-preview.jpg" alt="Frieren" className="object-cover w-full h-full" />
-          </div>
-          <div className="relative overflow-hidden rounded-lg transform transition-transform duration-300 hover:scale-110">
-            <img src="https://wallpapers.com/images/featured/anime-dbt18qjb7b1cstr1.jpg" alt="Naruto" className="object-cover w-full h-full" />
-          </div>
-          <div className="relative overflow-hidden rounded-lg transform transition-transform duration-300 hover:scale-110">
-            <img src="https://wallpapercave.com/wp/wp2912446.jpg" alt="Luffy" className="object-cover w-full h-full" />
-          </div>
-          <div className="relative overflow-hidden rounded-lg transform transition-transform duration-300 hover:scale-110">
-            <img src="https://p.im9.eu/hollow-bleach-kurosaki-ichigo-anime-1920x1080-wallpaper-hd.jpg" alt="Goku" className="object-cover w-full h-full" />
-          </div>
-          <div className="relative overflow-hidden rounded-lg transform transition-transform duration-300 hover:scale-110">
-            <img src="https://wallpapersmug.com/download/1920x1080/d55e88/satoru-gojo-4k.jpeg" alt="Ichigo" className="object-cover w-full h-full" />
-          </div>
-          <div className="relative overflow-hidden rounded-lg transform transition-transform duration-300 hover:scale-110">
-            <img src="https://i.pinimg.com/originals/47/24/3e/47243e1d51883c7982c681759c99b720.jpg" alt="Yuta" className="object-cover w-full h-full" />
-          </div>
-          
-        </div>
-      </div>
-    </section>
-*/}
 				{/* Separador de pagina */}
 				<div className="max-w-7xl mx-auto min-h-[5px] flex justify-center items-center h-8 bg-blue-500">
 					<div className="border-t border-blue-500 w-full"></div>
