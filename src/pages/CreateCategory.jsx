@@ -1,15 +1,18 @@
+import Title from '../components/Title'
+import Navbar from '../components/Navbar'
 import ProductCard from '../components/ProductCard'
 import supabase from '../supabase/client'
 import { useEffect, useState } from 'react'
 import { useAuth } from './auth';
-import { IconArrowUp } from '@tabler/icons-react';
+import { IconArrowUp, IconBackground } from '@tabler/icons-react';
 import { IconArrowDown } from '@tabler/icons-react';
 import { IconSortAZ } from '@tabler/icons-react';
 import { IconClock } from '@tabler/icons-react';
 import { IconCoin } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom'
+import React from 'react';
 
-import { IconUserCircle } from '@tabler/icons-react';
+import { IconUser, IconUserCircle } from '@tabler/icons-react';
 import logo from '../assets/logos/Hero-Shop-logo.webp';
 import { IconSearch } from '@tabler/icons-react';
 import { Link } from "react-router-dom";
@@ -17,8 +20,6 @@ import { IconBrandMeta } from '@tabler/icons-react';
 import { IconBrandXdeep } from '@tabler/icons-react';
 import { IconBrandInstagram } from '@tabler/icons-react';
 import { IconLetterJSmall } from '@tabler/icons-react';
-// import { IconLogout } from '@tabler/icons-react';
-
 // eslint-disable-next-line react/prop-types
 const Dashboard = () => {
 	const navigate = useNavigate();
@@ -35,13 +36,12 @@ const Dashboard = () => {
 		if (isAuthenticated) {
 			fetchUserData();
 		}
-	}, [isAuthenticated, userData]);
+	}, [isAuthenticated]);
 
 	const [fetchError, setFetchError] = useState(null)
 	const [productos, setProductos] = useState(null)
 	const [orderBy, setOrderBy] = useState('created_at')
 	const [asc, setAsc] = useState(true)
-	const [articulo, setArticulo] = useState('')
 
 	const handleDelete = (id) => {
 		setProductos(productoAnterior => {
@@ -81,7 +81,6 @@ const Dashboard = () => {
 
 	}, [orderBy, asc])
 
-	// eslint-disable-next-line no-unused-vars
 	const handleLogOut = async () => {
 		const { error } = await supabase.auth.signOut();
 		if (error) {
@@ -92,14 +91,12 @@ const Dashboard = () => {
 		}
 		navigate('/')
 	}
-
 	const handleArticulo = (e) => {
 		e.preventDefault()
 		setArticulo(e.target.value)
 
 		fetchSingleProducts()
 	}
-
 	const fetchSingleProducts = async () => {
 		const { data, error } = await supabase
 			.from('productos')
@@ -177,7 +174,7 @@ const Dashboard = () => {
         /* Define otros estilos globales */
       `}
 			</style>
-			<body>
+			<body >
 				<header>
 					<div className="bg-[color:var(--background-color)]">
 						<div className="flex justify-between items-center ml-20 px-0 py-[0.3rem]">
@@ -207,104 +204,67 @@ const Dashboard = () => {
 								<i className="fa-solid hidden"></i>
 								<ul className="flex gap-8 mr-[10%] mt-[1.2%]">
 									<li className='list-style: none'><a className='no-underline text-[1.3rem] text-[color:var(--background-color)] font-semibold uppercase relative after:w-6 after:h-px after:bg-[color:var(--Blue-label-de-jonny-walker)] after:absolute after:bottom-[-3px] after:-translate-x-2/4 after:translate-y-2/4 after:opacity-0 after:transition-all after:duration-[0.3s] after:ease-[ease] after:left-2/4 hover:after:opacity-100 hover:text-[color:var(--Blue-label-de-jonny-walker)]' href="/dashboard">Inicio</a></li>
-									<li className='list-style: none'><a className='no-underline text-[1.3rem] text-[color:var(--background-color)] font-semibold uppercase relative after:w-6 after:h-px after:bg-[color:var(--Blue-label-de-jonny-walker)] after:absolute after:bottom-[-3px] after:-translate-x-2/4 after:translate-y-2/4 after:opacity-0 after:transition-all after:duration-[0.3s] after:ease-[ease] after:left-2/4 hover:after:opacity-100 hover:text-[color:var(--Blue-label-de-jonny-walker)]' href="/dashboard">Pedidos <span className='absolute bottom-[-3px] left-2/4 transform -translate-x-2/4 -translate-y-2/4 bg-[color:var(--Blue-label-de-jonny-walker)] w-6 h-[1px] opacity-0 transition-all duration-300 ease-in-out group-hover:opacity-100'></span></a></li>
+									<li className='list-style: none'><a className='no-underline text-[1.3rem] text-[color:var(--background-color)] font-semibold uppercase relative after:w-6 after:h-px after:bg-[color:var(--Blue-label-de-jonny-walker)] after:absolute after:bottom-[-3px] after:-translate-x-2/4 after:translate-y-2/4 after:opacity-0 after:transition-all after:duration-[0.3s] after:ease-[ease] after:left-2/4 hover:after:opacity-100 hover:text-[color:var(--Blue-label-de-jonny-walker)]' href="#">Pedidos <span className='absolute bottom-[-3px] left-2/4 transform -translate-x-2/4 -translate-y-2/4 bg-[color:var(--Blue-label-de-jonny-walker)] w-6 h-[1px] opacity-0 transition-all duration-300 ease-in-out group-hover:opacity-100'></span></a></li>
 									<li className='list-style: none'><a className='no-underline text-[1.3rem] text-[color:var(--background-color)] font-semibold uppercase relative after:w-6 after:h-px after:bg-[color:var(--Blue-label-de-jonny-walker)] after:absolute after:bottom-[-3px] after:-translate-x-2/4 after:translate-y-2/4 after:opacity-0 after:transition-all after:duration-[0.3s] after:ease-[ease] after:left-2/4 hover:after:opacity-100 hover:text-[color:var(--Blue-label-de-jonny-walker)]' href="/create-category">Agregar Categoria</a></li>
-									<li className='list-style: none'><a className='no-underline text-[1.3rem] text-[color:var(--background-color)] font-semibold uppercase relative after:w-6 after:h-px after:bg-[color:var(--Blue-label-de-jonny-walker)] after:absolute after:bottom-[-3px] after:-translate-x-2/4 after:translate-y-2/4 after:opacity-0 after:transition-all after:duration-[0.3s] after:ease-[ease] after:left-2/4 hover:after:opacity-100 hover:text-[color:var(--Blue-label-de-jonny-walker)]' href="/dashboard">Venta</a></li>
-									<li className='list-style: none'><a className='no-underline text-[1.3rem] text-[color:var(--background-color)] font-semibold uppercase relative after:w-6 after:h-px after:bg-[color:var(--Blue-label-de-jonny-walker)] after:absolute after:bottom-[-3px] after:-translate-x-2/4 after:translate-y-2/4 after:opacity-0 after:transition-all after:duration-[0.3s] after:ease-[ease] after:left-2/4 hover:after:opacity-100 hover:text-[color:var(--Blue-label-de-jonny-walker)]' href="/dashboard">Devoluciones</a></li>
-									<li className='list-style: none'><a className='no-underline text-[1.3rem] text-[color:var(--background-color)] font-semibold uppercase relative after:w-6 after:h-px after:bg-[color:var(--Blue-label-de-jonny-walker)] after:absolute after:bottom-[-3px] after:-translate-x-2/4 after:translate-y-2/4 after:opacity-0 after:transition-all after:duration-[0.3s] after:ease-[ease] after:left-2/4 hover:after:opacity-100 hover:text-[color:var(--Blue-label-de-jonny-walker)]' href="/dashboard">Quejas/sugerencias</a></li>
-									<li className='list-style: none'><a className='no-underline text-[1.3rem] text-[color:var(--background-color)] font-semibold uppercase relative after:w-6 after:h-px after:bg-[color:var(--Blue-label-de-jonny-walker)] after:absolute after:bottom-[-3px] after:-translate-x-2/4 after:translate-y-2/4 after:opacity-0 after:transition-all after:duration-[0.3s] after:ease-[ease] after:left-2/4 hover:after:opacity-100 hover:text-[color:var(--Blue-label-de-jonny-walker)]' href="/dashboard">Usuarios</a></li>
+									<li className='list-style: none'><a className='no-underline text-[1.3rem] text-[color:var(--background-color)] font-semibold uppercase relative after:w-6 after:h-px after:bg-[color:var(--Blue-label-de-jonny-walker)] after:absolute after:bottom-[-3px] after:-translate-x-2/4 after:translate-y-2/4 after:opacity-0 after:transition-all after:duration-[0.3s] after:ease-[ease] after:left-2/4 hover:after:opacity-100 hover:text-[color:var(--Blue-label-de-jonny-walker)]' href="#">Venta</a></li>
+									<li className='list-style: none'><a className='no-underline text-[1.3rem] text-[color:var(--background-color)] font-semibold uppercase relative after:w-6 after:h-px after:bg-[color:var(--Blue-label-de-jonny-walker)] after:absolute after:bottom-[-3px] after:-translate-x-2/4 after:translate-y-2/4 after:opacity-0 after:transition-all after:duration-[0.3s] after:ease-[ease] after:left-2/4 hover:after:opacity-100 hover:text-[color:var(--Blue-label-de-jonny-walker)]' href="#">Devoluciones</a></li>
+									<li className='list-style: none'><a className='no-underline text-[1.3rem] text-[color:var(--background-color)] font-semibold uppercase relative after:w-6 after:h-px after:bg-[color:var(--Blue-label-de-jonny-walker)] after:absolute after:bottom-[-3px] after:-translate-x-2/4 after:translate-y-2/4 after:opacity-0 after:transition-all after:duration-[0.3s] after:ease-[ease] after:left-2/4 hover:after:opacity-100 hover:text-[color:var(--Blue-label-de-jonny-walker)]' href="#">Quejas/sugerencias</a></li>
+									<li className='list-style: none'><a className='no-underline text-[1.3rem] text-[color:var(--background-color)] font-semibold uppercase relative after:w-6 after:h-px after:bg-[color:var(--Blue-label-de-jonny-walker)] after:absolute after:bottom-[-3px] after:-translate-x-2/4 after:translate-y-2/4 after:opacity-0 after:transition-all after:duration-[0.3s] after:ease-[ease] after:left-2/4 hover:after:opacity-100 hover:text-[color:var(--Blue-label-de-jonny-walker)]' href="#">Usuarios</a></li>
 								</ul>
 
-								<form className="relative flex bg-white h-[4.4rem] overflow-hidden mr-[-18%] rounded-[2rem] border-2 border-solid border-white" style={{ alignItems: 'right' }}>
-									<input className='w-[25rem] text-[1.4rem] text-[#777] cursor-pointer px-8 py-0 border-[none]' style={{ outline: 'none', WebkitAppearance: 'none' }} type="text" id="simple-search" placeholder="Buscar..."
-										required
-										onChange={(e) => setArticulo(e.target.value)} />
-									<button type="submit" className="bg-[color:var(--primary-color)] flex items-center justify-center h-full p-4 border-[none];" onClick={handleArticulo}>
-										<IconSearch className='text-[2rem] text-white' stroke={3} size='2rem' style={{ color: '#fff' }} />
-									</button>
 
-								</form>
 							</nav>
 						</div>
 					</div>
 				</header>
+				{/*h-[60rem] flex justify-center items-center bg-cover bg-center bg-[linear-gradient(100deg,#000000,#00000020),url("https://elviajerofeliz.com/wp-content/uploads/2020/05/Por-qu%C3%A9-Tokio-es-una-de-las-ciudades-m%C3%A1s-sorprendentes.jpg")]*/}
+
+				{/*w-[40rem] h-[24rem] ml-auto mr-[5rem] bg-slate-800 border border-slate-400 rounded-md p-10 shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-30 relative*/}
+				{/*text-4xl text-white font-bold text-center mb-6 font-[Poppins]*/}
+				{/*my-5 block w-full py-2.3 px-0 text-4xl text-white bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:text-white focus:border-blue-600 peer*/}
+
+				{/*Parte del formulario de categoria*/}
 				<main className="main-content">
-					{/*Poner flex flex-col para elemento dinamico insertado abajo*/}
-					<section className="max-w-[110rem] mx-auto my-0 gap-8 mb-12">
-						<br />
-						<h1 className="text-center font-medium text-5xl">Categorias disponibles</h1>
-						<br />
-						<div className=" max-w-[120rem] mx-auto my-0 grid grid-cols-[repeat(4,1fr)] gap-12 ">
-							<div className="h-80 flex flex-col items-center justify-center gap-8 rounded-[2rem] bg-[linear-gradient(#0000,#000000),url('https://i.ibb.co/4ZpQ4HZ/Playeras.webp')] bg-cover bg-center bg-no-repeat" onClick={() => handleFilterByCategory(1)}>
-								<p className='text-[2.5rem] text-white capitalize relative after:w-10 after:h-0.5 after:bg-white after:absolute after:bottom-[-1rem] after:-translate-x-2/4 after:translate-y-2/4 after:left-2/4' onClick={() => handleFilterByCategory(1)}>Playeras</p>
-								<span className='text-[1.6rem] text-white cursor-pointer hover:text-[color:var(--Blue-label-de-jonny-walker)]' onClick={() => handleFilterByCategory(1)}>Ver</span>
-							</div>
-							<div className="h-80 flex flex-col items-center justify-center gap-8 rounded-[2rem] bg-[linear-gradient(#0000,#000000),url('https://i.ibb.co/LCH6MXv/Pines.webp')] bg-cover bg-center bg-no-repeat" onClick={() => handleFilterByCategory(3)}>
-								<p className='text-[2.5rem] text-white capitalize relative after:w-10 after:h-0.5 after:bg-white after:absolute after:bottom-[-1rem] after:-translate-x-2/4 after:translate-y-2/4 after:left-2/4' onClick={() => handleFilterByCategory(3)}>Pines Metalicos</p>
-								<span className='text-[1.6rem] text-white cursor-pointer hover:text-[color:var(--Blue-label-de-jonny-walker)]' onClick={() => handleFilterByCategory(3)}>Ver</span>
-							</div>
-							<div className="h-80 flex flex-col items-center justify-center gap-8 rounded-[2rem] bg-[linear-gradient(#0000,#000000),url('https://img.fantaskycdn.com/d89f20eaba6182c83b81b32cdf29e799\_900x.jpg')] bg-cover bg-center bg-no-repeat" onClick={() => handleFilterByCategory(4)}>
-								<p className='text-[2.5rem] text-white capitalize relative after:w-10 after:h-0.5 after:bg-white after:absolute after:bottom-[-1rem] after:-translate-x-2/4 after:translate-y-2/4 after:left-2/4' onClick={() => handleFilterByCategory(4)}>Cuadros</p>
-								<span className='text-[1.6rem] text-white cursor-pointer hover:text-[color:var(--Blue-label-de-jonny-walker)]' onClick={() => handleFilterByCategory(4)}>Ver</span>
-							</div>
-							<div className="h-80 flex flex-col items-center justify-center gap-8 rounded-[2rem] bg-[linear-gradient(#0000,#000000),url('https://i.ibb.co/GT3sQbF/Otros.jpg')] bg-cover bg-center bg-no-repeat" onClick={() => handleFilterByCategory(2)}>
-								<p className='text-[2.5rem] text-white capitalize relative after:w-10 after:h-0.5 after:bg-white after:absolute after:bottom-[-1rem] after:-translate-x-2/4 after:translate-y-2/4 after:left-2/4' onClick={() => handleFilterByCategory(2)}>Otros</p>
-								<span className='text-[1.6rem] text-white cursor-pointer hover:text-[color:var(--Blue-label-de-jonny-walker)]' onClick={() => handleFilterByCategory(2)}>Ver</span>
+					<div className='h-[60rem] flex justify-center items-center bg-cover bg-center bg-[linear-gradient(100deg,#000000,#00000020),url("https://elviajerofeliz.com/wp-content/uploads/2020/05/Por-qu%C3%A9-Tokio-es-una-de-las-ciudades-m%C3%A1s-sorprendentes.jpg")]' >
+						<div>
+							<div className="bg-slate-800 border border-slate-600 rounded-md p-8 shadow-lg backdrop-filter backdrop-blur-lg bg-opacity-30 relative">
+								<h1 className="text-4xl text-white font-bold text-center mb-6">Administración</h1>
+								<form action="">
+									<div className="relative my-4">
+										<input
+											id="id"
+											name="id"
+											className="block w-72 py-2.5 px-0 text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+											placeholder=" "
+										/>
+										<label htmlFor="id" className="absolute text-2xl text-white duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">ID</label>
+									</div>
+									<div className="relative my-4">
+										<input
+											id="nombre"
+											name="nombre"
+											className="block w-72 py-2.5 px-0 text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+											placeholder=" "
+										/>
+										<label htmlFor="nombre" className="absolute text-2xl  text-white duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Nombre</label>
+									</div>
+
+									<span>
+										<button type="submit" className="w-full mb-4 text-[18px] mt-6 rounded-full bg-white text-emerald-800 hover:bg-emerald-600 hover:text-white py-2 transition-colors duration-300">
+											<a href="">Crear</a>
+										</button>
+
+										<button type="submit" className="w-full mb-4 text-[18px] mt-6 rounded-full bg-white text-emerald-800 hover:bg-emerald-600 hover:text-white py-2 transition-colors duration-300">
+											<a href="">Borrar</a>
+										</button>
+									</span>
+								</form>
 							</div>
 						</div>
-					</section>
-
-					<section className='max-w-[110rem] mx-auto my-0 flex flex-col gap-8 mb-4'>
-						<div className='flex justify-center gap-8 mb-4'>
-							<p className='text-[#1C50CB] text-[15px] font-[Poppins] font-bold'><a>Ordenar por:</a></p>
-							<div className='text-[#1C50CB] text-[15px] font-[bold]'>
-								{!asc ? <IconArrowUp stroke={2} />
-									: <IconArrowDown stroke={2} />}
-							</div>
-							<button onClick={() => handleOrder('created_at')} className={`flex items-center gap-1 p-2 border-b-2 ${orderBy === 'created_at' ? 'text-primary border-primary' : ''} hover:border-primary hover:text-primary`}>
-								<IconClock stroke={2} />
-								Creacion
-							</button>
-							<button onClick={() => handleOrder('nombre')} className={`flex items-center gap-1 p-2 border-b-2 ${orderBy === 'nombre' ? 'text-primary border-primary' : ''} hover:border-primary hover:text-primary`}>
-								<IconSortAZ stroke={2} />
-								Nombre
-							</button>
-							<button onClick={() => handleOrder('precio')} className={`flex items-center gap-1 p-2 border-b-2 ${orderBy === 'precio' ? 'text-primary border-primary' : ''} hover:border-primary hover:text-primary`}>
-								<IconCoin stroke={2} />
-								Precio
-								{/* {!asc ? <svg xmlns="http://www.w3.org/2000/svg" className='size-5' viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><polyline points="6 9 12 15 18 9" /></svg> : <svg xmlns="http://www.w3.org/2000/svg" className='size-5' viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><polyline points="6 15 12 9 18 15" /></svg>} */}
-							</button>
-							<span className="text-[var(--background-color)] bg-[var(--red-color)] text-[1.4rem] capitalize cursor-pointer ml-[3%] px-12 py-[0.7rem] rounded-[2rem] hover:bg-[var(--red-color)] hover:text-[var(--background-color-rojito)] active:bg-[var(--primary-color)] active:text-[var(--Blue-label-de-jonny-walker)]"><a href="/Create-product">Crear producto</a></span>
-
-						</div>
+					</div>
 
 
 
-
-
-						{/* Contenedor de productos */}
-						<div className='grid gap-12 grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4'>
-							{fetchError && <p>{fetchError}</p>}
-							{productos && productos.map(producto => (
-								<ProductCard
-									key={producto.id}
-									id={producto.id}
-									imagen={producto.img_url}
-									tipo={producto.tipo}
-									nombre={producto.nombre}
-									precio={producto.precio}
-									onDelete={handleDelete}
-								/>
-							))}
-						</div>
-						{/* Controles de paginación */}
-						<h1 className="text-center font-medium text-5xl">Página</h1>
-						<div className="flex justify-center gap-8 mb-4">
-							<span className="text-[var(--background-color)] bg-[var(--primary-color)] text-[1.4rem] capitalize cursor-pointer px-12 py-[0.7rem] rounded-[2rem] hover:bg-[var(--primary-color)] hover:text-[var(--Blue-label-de-jonny-walker)] active:bg-[var(--primary-color)] active:text-[var(--Blue-label-de-jonny-walker)]">Anterior</span>
-							<span className='text-[var(--background-color)] bg-[var(--primary-color)] text-[1.4rem] capitalize cursor-pointer px-12 py-[0.7rem] rounded-[2rem] hover:bg-[var(--primary-color)] hover:text-[var(--Blue-label-de-jonny-walker)] active:bg-[var(--primary-color)] active:text-[var(--Blue-label-de-jonny-walker)]'>Siguiente</span>
-						</div>
-					</section>
-					<br />
 				</main>
 				{/*Parte del Footer*/}
 				<div className='bg-[#1C50CB]'>
@@ -345,7 +305,7 @@ const Dashboard = () => {
 									<p className='text-xl leading-[15px] cursor-pointer mx-0 my-2 hover:text-[var(--Blue-label-de-jonny-walker)]'>Neko-beads</p>
 								</a>
 								<a href="/dashboard">
-									<p className='text-xl leading-[15px] cursor-pointer mx-0 my-2 hover:text-[var(--Blue-label-de-jonny-walker)]'>Calcetos shop</p>
+									<p className='text-xl leading-[15px] cursor-pointer mx-0 my-2 hover:text-[var(--Blue-label-de-jonny-walker)]'>Calceto's shop</p>
 								</a>
 							</div>
 
@@ -422,9 +382,12 @@ const Dashboard = () => {
 						</div>
 
 
-					</div></div>
+
+					</div>
+				</div>
 
 			</body>
+
 		</>
 	)
 }

@@ -6,11 +6,14 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import CreateProduct from './pages/CreateProduct';
+import CreateCategory from './pages/CreateCategory';
 import EditProduct from './pages/EditProduct';
 import NotFoundPage from './pages/NotFoundPage';
 import AccessDeniedPage from './pages/AccessDeniedPage';
 import { useAuth } from './pages/auth';
 import ProtectedRoute from './components/ProtectedRoute';
+import ProductsPage from './pages/Products';
+import ProductDetail from './pages/ProductDetail';
 
 // import Navbar from "./components/Navbar";
 
@@ -29,6 +32,8 @@ function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/products" element={<ProductsPage />} />
+          <Route path="/products/:productId" element={<ProductDetail />} />
           <Route
             path="/dashboard"
             element={
@@ -45,6 +50,16 @@ function App() {
               </ProtectedRoute>
             }
           />
+
+          <Route
+            path="/create-category"
+            element={
+              <ProtectedRoute isAuthenticated={isAuthenticated}>
+                <CreateCategory />
+              </ProtectedRoute>
+            }
+          />
+
           <Route
             path="/edit-product/:id"
             element={
