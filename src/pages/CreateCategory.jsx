@@ -155,24 +155,24 @@ const Dashboard = () => {
 			<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
 			<style>
 				{`
-        :root {
-          --primary-color: #1c50cb;
-          --background-color: #fff;
-		  --dark-color: #151515;
-		  --red-color: #e10c0c;
-		  --Orange-color: #f5af36;
-		  --Blue-label-de-jonny-walker: #21bfe2;
-		  --dark-blue: #251d4e;
-		  --Color-Paleta-2: #3bb273;
-		  --background-color-rojito: #dd9519;
-        }
-        html {
-          font-size: 62.5%;
-          overflow-x: hidden;
-          font-family: "Poppins", sans-serif;
-        }
-        /* Define otros estilos globales */
-      `}
+					:root {
+					--primary-color: #1c50cb;
+					--background-color: #fff;
+					--dark-color: #151515;
+					--red-color: #e10c0c;
+					--Orange-color: #f5af36;
+					--Blue-label-de-jonny-walker: #21bfe2;
+					--dark-blue: #251d4e;
+					--Color-Paleta-2: #3bb273;
+					--background-color-rojito: #dd9519;
+					}
+					html {
+					font-size: 62.5%;
+					overflow-x: hidden;
+					font-family: "Poppins", sans-serif;
+					}
+					/* Define otros estilos globales */
+      			`}
 			</style>
 			<body >
 				<header>
@@ -305,7 +305,7 @@ const Dashboard = () => {
 									<p className='text-xl leading-[15px] cursor-pointer mx-0 my-2 hover:text-[var(--Blue-label-de-jonny-walker)]'>Neko-beads</p>
 								</a>
 								<a href="/dashboard">
-									<p className='text-xl leading-[15px] cursor-pointer mx-0 my-2 hover:text-[var(--Blue-label-de-jonny-walker)]'>Calceto's shop</p>
+									<p className='text-xl leading-[15px] cursor-pointer mx-0 my-2 hover:text-[var(--Blue-label-de-jonny-walker)]'>Calcetos shop</p>
 								</a>
 							</div>
 
