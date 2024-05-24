@@ -12,7 +12,6 @@ import NotFoundPage from './pages/NotFoundPage';
 import AccessDeniedPage from './pages/AccessDeniedPage';
 import { useAuth } from './pages/auth';
 import ProtectedRoute from './components/ProtectedRoute';
-import ProductsPage from './pages/Products';
 import ProductDetail from './pages/ProductDetail';
 
 // import Navbar from "./components/Navbar";
@@ -32,7 +31,7 @@ function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/products" element={<ProductsPage />} />
+          {/* <Route path="/products" element={<ProductsPage />} /> */}
           <Route path="/products/:productId" element={<ProductDetail />} />
           <Route
             path="/dashboard"

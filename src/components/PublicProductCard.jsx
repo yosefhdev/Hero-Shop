@@ -6,7 +6,7 @@ const PublicProductCard = ({ id, tipo, nombre, precio, descripccion }) => {
     return (
         <>
             {/* 2xl:w-1/6 xl:w-1/5 lg:w-1/4 md:w-1/3 sm:w-1/2 */}
-            <Link to={'/ver-producto/' + id}>
+            <Link to={'/products/' + id}>
                 <div className="w-full h-full p-2 grid">
                     <div className="p-2 flex flex-col justify-between bg-gray-100 rounded-xl">
                         <div>

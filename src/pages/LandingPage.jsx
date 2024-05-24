@@ -297,13 +297,13 @@ const LandingPage = () => {
 						<div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6'>
 							{fetchError && <p>{fetchError}</p>}
 							{productos && productos.map(producto => (
-								<PublicProductCard
-									key={producto.id}
-									id={producto.id}
-									tipo={producto.tipo}
-									nombre={producto.nombre}
-									precio={producto.precio}
-								/>
+									<PublicProductCard
+										key={producto.id}
+										id={producto.id}
+										tipo={producto.tipo}
+										nombre={producto.nombre}
+										precio={producto.precio}
+									/>
 							))}
 						</div>
 					</section>
