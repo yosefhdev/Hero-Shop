@@ -13,6 +13,7 @@ import AccessDeniedPage from './pages/AccessDeniedPage';
 import { useAuth } from './pages/auth';
 import ProtectedRoute from './components/ProtectedRoute';
 import ProductDetail from './pages/ProductDetail';
+import TipoUsuario from "./pages/TipoUsuario";
 
 // import Navbar from "./components/Navbar";
 
@@ -50,6 +51,15 @@ function App() {
             }
           />
 
+          <Route
+            path="/TipoUsuario"
+            element={
+              <ProtectedRoute isAuthenticated={isAuthenticated} isAdmin={true}>
+                <TipoUsuario />
+              </ProtectedRoute>
+            }
+          />
+          
           <Route
             path="/create-category"
             element={
