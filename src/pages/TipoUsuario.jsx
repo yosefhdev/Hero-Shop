@@ -29,7 +29,7 @@ const TipoUsuario = () => {
   }, []);
 
   const handleToggleRole = async (userId, currentRole) => {
-    const newRole = currentRole === 'Administrador' ? 'Cliente' : 'Administrador';
+    const newRole = currentRole === 1 ? 2 : 1;
     try {
       const { error } = await supabase
         .from('usuarios')
@@ -82,13 +82,13 @@ const TipoUsuario = () => {
                   <td className="px-6 py-4 bg-blue-500 text-xs">{user.nombre}</td>
                   <td className="px-6 py-4 text-xs">{user.apellido_paterno}</td>
                   <td className="px-6 py-4 bg-blue-500 text-xs">{user.apellido_materno}</td>
-                  <td className="px-6 py-4 text-xs">{user.rol}</td>
+                  <td className="px-6 py-4 text-xs">{user.rol=== 1 ? 'Admin' : 'Cliente'}</td>
                   <td className="px-6 py-4 bg-blue-500 text-xs">
                     <button 
                       className="font-medium text-white hover:underline" 
                       onClick={() => handleToggleRole(user.id, user.rol)}
                     >
-                      {user.rol === 'Administrador' ? 'Cambiar a Cliente' : 'Cambiar a Administrador'}
+                      {user.rol === 1 ? 'Cambiar a Cliente' : 'Cambiar a Admin'}
                     </button>
                   </td>
                 </tr>
