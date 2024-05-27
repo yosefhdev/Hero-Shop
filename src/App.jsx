@@ -13,6 +13,7 @@ import AccessDeniedPage from './pages/AccessDeniedPage';
 import { useAuth } from './pages/auth';
 import ProtectedRoute from './components/ProtectedRoute';
 import ProductDetail from './pages/ProductDetail';
+import TipoUsuario from "./pages/TipoUsuario";
 import Loader from './components/Loader';
 
 function App() {
