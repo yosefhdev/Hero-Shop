@@ -26,7 +26,6 @@ const Dashboard = () => {
 	const { isAuthenticated } = useAuth();
 	const [userData, setUserData] = useState(null);
 
-
 	useEffect(() => {
 		const fetchUserData = async () => {
 			const { data: { user } } = await supabase.auth.getUser();

@@ -60,6 +60,15 @@ function App() {
 					/>
 
 					<Route
+						path="/user-roles"
+						element={
+							<ProtectedRoute isAuthenticated={isAuthenticated} isAdmin={true}>
+								<TipoUsuario />
+							</ProtectedRoute>
+						}
+					/>
+
+					<Route
 						path="/edit-product/:id"
 						element={
 							<ProtectedRoute isAuthenticated={isAuthenticated} isAdmin={true}>
