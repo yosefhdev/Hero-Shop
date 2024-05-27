@@ -1,4 +1,5 @@
 import ProductCard from '../components/ProductCard'
+import Loader from '../components/Loader'
 import supabase from '../supabase/client'
 import { useEffect, useState } from 'react'
 import { useAuth } from './auth';
@@ -8,7 +9,6 @@ import { IconSortAZ } from '@tabler/icons-react';
 import { IconClock } from '@tabler/icons-react';
 import { IconCoin } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom'
-
 import { IconUserCircle } from '@tabler/icons-react';
 import logo from '../assets/logos/Hero-Shop-logo.webp';
 import { IconSearch } from '@tabler/icons-react';
@@ -26,16 +26,37 @@ const Dashboard = () => {
 	const { isAuthenticated } = useAuth();
 	const [userData, setUserData] = useState(null);
 
+
 	useEffect(() => {
 		const fetchUserData = async () => {
 			const { data: { user } } = await supabase.auth.getUser();
-			setUserData(user);
+			if (user) {
+				console.log('user.id', user.id)
+				let { data, error } = await supabase
+					.from('usuarios')
+					.select("*")
+					.eq('id', user.id)
+
+				if (error) {
+					console.error('Error al cargar el usuario:', error.message);
+					return;
+				}
+
+				if (data) {
+					let rol = data[0].rol;
+					if (rol === 2) {
+						navigate('/access-denied')
+					}
+					setIsLoading(false);
+					setUserData(data[0]);
+				}
+			}
 		};
 
 		if (isAuthenticated) {
 			fetchUserData();
 		}
-	}, [isAuthenticated, userData]);
+	}, [isAuthenticated, navigate]);
 
 	const [fetchError, setFetchError] = useState(null)
 	const [productos, setProductos] = useState(null)
@@ -151,7 +172,10 @@ const Dashboard = () => {
 		}
 	}
 
-	/*Prueba categoria elementos*/
+	const [isLoading, setIsLoading] = useState(true);
+	if (isLoading) {
+		return <Loader />
+	}
 
 	return (
 		<>
@@ -177,7 +201,7 @@ const Dashboard = () => {
         /* Define otros estilos globales */
       `}
 			</style>
-			<body>
+			<div>
 				<header>
 					<div className="bg-[color:var(--background-color)]">
 						<div className="flex justify-between items-center ml-20 px-0 py-[0.3rem]">
@@ -190,7 +214,7 @@ const Dashboard = () => {
 
 								{isAuthenticated && userData && (
 									<p className='mt-[2%] text-right'>
-										<a className='text-[#1C50CB] text-[15px]'>Bienvenido, {`${userData.user_metadata.name} ${userData.user_metadata.apellido_P} ${userData.user_metadata.apellido_M}`} </a>
+										<a className='text-[#1C50CB] text-[15px]'>Bienvenido, {`${userData.nombre}`} </a>
 										<br />
 										<a className='text-[#e10c0c] text-[15px]' onClick={handleLogOut}>Cerrar sesion</a>
 									</p>
@@ -203,16 +227,16 @@ const Dashboard = () => {
 
 					<div>
 						<div className="bg-[color:var(--primary-color)] mr-0 justify-between flex">
-							<nav className="justify-between flex ml-[2.5%] px-4 lg:px-6 py-2.5 border-gray-200 px-4 lg:px-6 py-2.5">
+							<nav className="justify-between flex ml-[2.5%] px-4 lg:px-6 py-2.5 border-gray-200">
 								<i className="fa-solid hidden"></i>
 								<ul className="flex gap-8 mr-[10%] mt-[1.2%]">
-									<li className='list-style: none'><a className='no-underline text-[1.3rem] text-[color:var(--background-color)] font-semibold uppercase relative after:w-6 after:h-px after:bg-[color:var(--Blue-label-de-jonny-walker)] after:absolute after:bottom-[-3px] after:-translate-x-2/4 after:translate-y-2/4 after:opacity-0 after:transition-all after:duration-[0.3s] after:ease-[ease] after:left-2/4 hover:after:opacity-100 hover:text-[color:var(--Blue-label-de-jonny-walker)]' href="/dashboard">Inicio</a></li>
-									<li className='list-style: none'><a className='no-underline text-[1.3rem] text-[color:var(--background-color)] font-semibold uppercase relative after:w-6 after:h-px after:bg-[color:var(--Blue-label-de-jonny-walker)] after:absolute after:bottom-[-3px] after:-translate-x-2/4 after:translate-y-2/4 after:opacity-0 after:transition-all after:duration-[0.3s] after:ease-[ease] after:left-2/4 hover:after:opacity-100 hover:text-[color:var(--Blue-label-de-jonny-walker)]' href="/dashboard">Pedidos <span className='absolute bottom-[-3px] left-2/4 transform -translate-x-2/4 -translate-y-2/4 bg-[color:var(--Blue-label-de-jonny-walker)] w-6 h-[1px] opacity-0 transition-all duration-300 ease-in-out group-hover:opacity-100'></span></a></li>
-									<li className='list-style: none'><a className='no-underline text-[1.3rem] text-[color:var(--background-color)] font-semibold uppercase relative after:w-6 after:h-px after:bg-[color:var(--Blue-label-de-jonny-walker)] after:absolute after:bottom-[-3px] after:-translate-x-2/4 after:translate-y-2/4 after:opacity-0 after:transition-all after:duration-[0.3s] after:ease-[ease] after:left-2/4 hover:after:opacity-100 hover:text-[color:var(--Blue-label-de-jonny-walker)]' href="/create-category">Agregar Categoria</a></li>
-									<li className='list-style: none'><a className='no-underline text-[1.3rem] text-[color:var(--background-color)] font-semibold uppercase relative after:w-6 after:h-px after:bg-[color:var(--Blue-label-de-jonny-walker)] after:absolute after:bottom-[-3px] after:-translate-x-2/4 after:translate-y-2/4 after:opacity-0 after:transition-all after:duration-[0.3s] after:ease-[ease] after:left-2/4 hover:after:opacity-100 hover:text-[color:var(--Blue-label-de-jonny-walker)]' href="/dashboard">Venta</a></li>
-									<li className='list-style: none'><a className='no-underline text-[1.3rem] text-[color:var(--background-color)] font-semibold uppercase relative after:w-6 after:h-px after:bg-[color:var(--Blue-label-de-jonny-walker)] after:absolute after:bottom-[-3px] after:-translate-x-2/4 after:translate-y-2/4 after:opacity-0 after:transition-all after:duration-[0.3s] after:ease-[ease] after:left-2/4 hover:after:opacity-100 hover:text-[color:var(--Blue-label-de-jonny-walker)]' href="/dashboard">Devoluciones</a></li>
-									<li className='list-style: none'><a className='no-underline text-[1.3rem] text-[color:var(--background-color)] font-semibold uppercase relative after:w-6 after:h-px after:bg-[color:var(--Blue-label-de-jonny-walker)] after:absolute after:bottom-[-3px] after:-translate-x-2/4 after:translate-y-2/4 after:opacity-0 after:transition-all after:duration-[0.3s] after:ease-[ease] after:left-2/4 hover:after:opacity-100 hover:text-[color:var(--Blue-label-de-jonny-walker)]' href="/dashboard">Quejas/sugerencias</a></li>
-									<li className='list-style: none'><a className='no-underline text-[1.3rem] text-[color:var(--background-color)] font-semibold uppercase relative after:w-6 after:h-px after:bg-[color:var(--Blue-label-de-jonny-walker)] after:absolute after:bottom-[-3px] after:-translate-x-2/4 after:translate-y-2/4 after:opacity-0 after:transition-all after:duration-[0.3s] after:ease-[ease] after:left-2/4 hover:after:opacity-100 hover:text-[color:var(--Blue-label-de-jonny-walker)]' href="/dashboard">Usuarios</a></li>
+									<li className='list-style: none'><Link className='no-underline text-[1.3rem] text-[color:var(--background-color)] font-semibold uppercase relative after:w-6 after:h-px after:bg-[color:var(--Blue-label-de-jonny-walker)] after:absolute after:bottom-[-3px] after:-translate-x-2/4 after:translate-y-2/4 after:opacity-0 after:transition-all after:duration-[0.3s] after:ease-[ease] after:left-2/4 hover:after:opacity-100 hover:text-[color:var(--Blue-label-de-jonny-walker)]' to="/dashboard">Pedidos <span className='absolute bottom-[-3px] left-2/4 transform -translate-x-2/4 -translate-y-2/4 bg-[color:var(--Blue-label-de-jonny-walker)] w-6 h-[1px] opacity-0 transition-all duration-300 ease-in-out group-hover:opacity-100'></span></Link></li>
+									<li className='list-style: none'><Link className='no-underline text-[1.3rem] text-[color:var(--background-color)] font-semibold uppercase relative after:w-6 after:h-px after:bg-[color:var(--Blue-label-de-jonny-walker)] after:absolute after:bottom-[-3px] after:-translate-x-2/4 after:translate-y-2/4 after:opacity-0 after:transition-all after:duration-[0.3s] after:ease-[ease] after:left-2/4 hover:after:opacity-100 hover:text-[color:var(--Blue-label-de-jonny-walker)]' to="/create-category">Agregar Categoria</Link></li>
+									<li className='list-style: none'><Link className='no-underline text-[1.3rem] text-[color:var(--background-color)] font-semibold uppercase relative after:w-6 after:h-px after:bg-[color:var(--Blue-label-de-jonny-walker)] after:absolute after:bottom-[-3px] after:-translate-x-2/4 after:translate-y-2/4 after:opacity-0 after:transition-all after:duration-[0.3s] after:ease-[ease] after:left-2/4 hover:after:opacity-100 hover:text-[color:var(--Blue-label-de-jonny-walker)]' to="/dashboard">Inicio</Link></li>
+									<li className='list-style: none'><Link className='no-underline text-[1.3rem] text-[color:var(--background-color)] font-semibold uppercase relative after:w-6 after:h-px after:bg-[color:var(--Blue-label-de-jonny-walker)] after:absolute after:bottom-[-3px] after:-translate-x-2/4 after:translate-y-2/4 after:opacity-0 after:transition-all after:duration-[0.3s] after:ease-[ease] after:left-2/4 hover:after:opacity-100 hover:text-[color:var(--Blue-label-de-jonny-walker)]' to="/dashboard">Venta</Link></li>
+									<li className='list-style: none'><Link className='no-underline text-[1.3rem] text-[color:var(--background-color)] font-semibold uppercase relative after:w-6 after:h-px after:bg-[color:var(--Blue-label-de-jonny-walker)] after:absolute after:bottom-[-3px] after:-translate-x-2/4 after:translate-y-2/4 after:opacity-0 after:transition-all after:duration-[0.3s] after:ease-[ease] after:left-2/4 hover:after:opacity-100 hover:text-[color:var(--Blue-label-de-jonny-walker)]' to="/dashboard">Devoluciones</Link></li>
+									<li className='list-style: none'><Link className='no-underline text-[1.3rem] text-[color:var(--background-color)] font-semibold uppercase relative after:w-6 after:h-px after:bg-[color:var(--Blue-label-de-jonny-walker)] after:absolute after:bottom-[-3px] after:-translate-x-2/4 after:translate-y-2/4 after:opacity-0 after:transition-all after:duration-[0.3s] after:ease-[ease] after:left-2/4 hover:after:opacity-100 hover:text-[color:var(--Blue-label-de-jonny-walker)]' to="/dashboard">Quejas/sugerencias</Link></li>
+									<li className='list-style: none'><Link className='no-underline text-[1.3rem] text-[color:var(--background-color)] font-semibold uppercase relative after:w-6 after:h-px after:bg-[color:var(--Blue-label-de-jonny-walker)] after:absolute after:bottom-[-3px] after:-translate-x-2/4 after:translate-y-2/4 after:opacity-0 after:transition-all after:duration-[0.3s] after:ease-[ease] after:left-2/4 hover:after:opacity-100 hover:text-[color:var(--Blue-label-de-jonny-walker)]' to="/dashboard">Usuarios</Link></li>
 								</ul>
 
 								<form className="relative flex bg-white h-[4.4rem] overflow-hidden mr-[-18%] rounded-[2rem] border-2 border-solid border-white" style={{ alignItems: 'right' }}>
@@ -424,7 +448,7 @@ const Dashboard = () => {
 
 					</div></div>
 
-			</body>
+			</div>
 		</>
 	)
 }

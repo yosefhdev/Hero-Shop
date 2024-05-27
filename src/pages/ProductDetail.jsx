@@ -2,11 +2,46 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import supabase from "../supabase/client";
 import { Link } from "react-router-dom";
+import Loader from "../components/Loader";
+import { useAuth } from './auth';
+import { useNavigate } from 'react-router-dom'
 
 const ProductDetail = () => {
 	const { productId } = useParams();
 	const [product, setProduct] = useState(null);
-	const [loading, setLoading] = useState(true);
+	const [isLoading, setIsLoading] = useState(true);
+	const { isAuthenticated } = useAuth();
+	const navigate = useNavigate();
+
+	useEffect(() => {
+		const fetchUserData = async () => {
+			const { data: { user } } = await supabase.auth.getUser();
+			if (user) {
+				console.log('user.id', user.id)
+				let { data, error } = await supabase
+					.from('usuarios')
+					.select("*")
+					.eq('id', user.id)
+
+				if (error) {
+					console.error('Error al cargar el usuario:', error.message);
+					return;
+				}
+
+				if (data) {
+					let rol = data[0].rol;
+					if (rol === 2) {
+						navigate('/access-denied')
+					}
+					setIsLoading(false);
+				}
+			}
+		};
+
+		if (isAuthenticated) {
+			fetchUserData();
+		}
+	}, [isAuthenticated, navigate]);
 
 	useEffect(() => {
 		const fetchProduct = async () => {
@@ -22,14 +57,14 @@ const ProductDetail = () => {
 				setProduct(data);
 			}
 
-			setLoading(false);
+			setIsLoading(false);
 		};
 
 		fetchProduct();
 	}, [productId]);
 
-	if (loading) {
-		return <p className="text-center">Cargando producto...</p>;
+	if (isLoading) {
+		return <Loader />
 	}
 
 	if (!product) {
@@ -65,9 +100,9 @@ const ProductDetail = () => {
 								<p className="border border-gray-300 rounded-md px-4 py-2 w-full">{product.descripcion}</p>
 							</div>
 							<div className="flex flex-row gap-x-5">
-									<button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-										Agregar al carrito
-									</button>
+								<button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+									Agregar al carrito
+								</button>
 								<Link to="/">
 									<button className="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
 										Volver

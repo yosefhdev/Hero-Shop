@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useAuth } from './auth';
 import { useNavigate } from 'react-router-dom'
 import { IconUserCircle } from '@tabler/icons-react';
+import Loader from '../components/Loader';
 
 import logo from '../assets/logos/Hero-Shop-logo.webp';
 import { Link } from "react-router-dom";
@@ -21,13 +22,39 @@ const Dashboard = () => {
 	useEffect(() => {
 		const fetchUserData = async () => {
 			const { data: { user } } = await supabase.auth.getUser();
-			setUserData(user);
+			if (user) {
+				console.log('user.id', user.id)
+				let { data, error } = await supabase
+					.from('usuarios')
+					.select("*")
+					.eq('id', user.id)
+
+				if (error) {
+					console.error('Error al cargar el usuario:', error.message);
+					return;
+				}
+
+				if (data) {
+					let rol = data[0].rol;
+					if (rol === 2) {
+						navigate('/access-denied')
+					}
+					setIsLoading(false);
+					setUserData(data[0]);
+				}
+			}
 		};
 
 		if (isAuthenticated) {
 			fetchUserData();
+
 		}
-	}, [isAuthenticated]);
+	}, [isAuthenticated, navigate]);
+
+	const [isLoading, setIsLoading] = useState(true);
+	if (isLoading) {
+		return <Loader />
+	}
 
 	// const [fetchError, setFetchError] = useState(null)
 	// const [productos, setProductos] = useState(null)
@@ -178,9 +205,9 @@ const Dashboard = () => {
 							</div>
 							<div className="flex gap-4 cursor-pointer">
 
-								{isAuthenticated && userData && (
+								{isAuthenticated && (
 									<p className='mt-[2%] text-right'>
-										<a className='text-[#1C50CB] text-[15px]'>Bienvenido, {`${userData.user_metadata.name} ${userData.user_metadata.apellido_P} ${userData.user_metadata.apellido_M}`} </a>
+										<a className='text-[#1C50CB] text-[15px]'>Bienvenido, {`${userData.nombre}`} </a>
 										<br />
 										<a className='text-[#e10c0c] text-[15px]' onClick={handleLogOut}>Cerrar sesion</a>
 									</p>
@@ -193,7 +220,7 @@ const Dashboard = () => {
 
 					<div>
 						<div className="bg-[color:var(--primary-color)] mr-0 justify-between flex">
-							<nav className="justify-between flex ml-[2.5%] px-4 lg:px-6 py-2.5 border-gray-200 px-4 lg:px-6 py-2.5">
+							<nav className="justify-between flex ml-[2.5%] px-4 lg:px-6 py-2.5 border-gray-200">
 								<i className="fa-solid hidden"></i>
 								<ul className="flex gap-8 mr-[10%] mt-[1.2%]">
 									<li className='list-style: none'><a className='no-underline text-[1.3rem] text-[color:var(--background-color)] font-semibold uppercase relative after:w-6 after:h-px after:bg-[color:var(--Blue-label-de-jonny-walker)] after:absolute after:bottom-[-3px] after:-translate-x-2/4 after:translate-y-2/4 after:opacity-0 after:transition-all after:duration-[0.3s] after:ease-[ease] after:left-2/4 hover:after:opacity-100 hover:text-[color:var(--Blue-label-de-jonny-walker)]' href="/dashboard">Inicio</a></li>

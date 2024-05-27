@@ -1,6 +1,7 @@
 import supabase from "../supabase/client"
 import { useEffect, useState } from 'react'
 import { useNavigate } from "react-router-dom"
+import Loader from "../components/Loader"
 
 // eslint-disable-next-line react/prop-types
 const CreateProduct = () => {
@@ -115,6 +116,42 @@ const CreateProduct = () => {
             navigate('/dashboard')
         }
     }
+
+    useEffect(() => {
+		const fetchUserData = async () => {
+			const { data: { user } } = await supabase.auth.getUser();
+			if (user) {
+				console.log('user.id', user.id)
+				let { data, error } = await supabase
+					.from('usuarios')
+					.select("*")
+					.eq('id', user.id)
+
+				if (error) {
+					console.error('Error al cargar el usuario:', error.message);
+					return;
+				}
+
+				if (data) {
+					let rol = data[0].rol;
+					if (rol === 2) {
+						navigate('/access-denied')
+					}
+					setIsLoading(false);
+				}
+			}
+		};
+
+		if (isAuthenticated) {
+			fetchUserData();
+
+		}
+	}, [isAuthenticated, navigate]);
+
+    const [isLoading, setIsLoading] = useState(true);
+	if (isLoading) {
+		return <Loader />
+	}
 
     return (
         <>

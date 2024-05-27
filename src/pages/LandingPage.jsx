@@ -15,7 +15,7 @@ import { IconSearch } from '@tabler/icons-react';
 import { IconTags } from '@tabler/icons-react';
 import { IconShoppingCart } from '@tabler/icons-react';
 import { IconLogout } from '@tabler/icons-react';
-
+import { IconLogin } from '@tabler/icons-react';
 const LandingPage = () => {
 
 	const navigate = useNavigate();
@@ -27,13 +27,33 @@ const LandingPage = () => {
 	useEffect(() => {
 		const fetchUserData = async () => {
 			const { data: { user } } = await supabase.auth.getUser();
-			setUserData(user);
+
+			if (user) {
+				console.log('user.id', user.id)
+				let { data, error } = await supabase
+					.from('usuarios')
+					.select("*")
+					.eq('id', user.id)
+
+				if (error) {
+					console.error('Error al cargar el usuario:', error.message);
+					return;
+				}
+
+				if (data) {
+					console.log('data', data[0]);
+					setUserData(data[0]);
+				}
+			}
 		};
 
 		if (isAuthenticated) {
 			fetchUserData();
 		}
-	}, [isAuthenticated, userData]);
+	}, [isAuthenticated]);
+
+
+
 
 	const [fetchError, setFetchError] = useState(null)
 	const [productos, setProductos] = useState(null)
@@ -157,7 +177,7 @@ const LandingPage = () => {
 							<>
 								<div className='flex gap-x-5'>
 									<p className='text-white'>
-										Bienvenido, {userData.user_metadata.name}
+										Bienvenido, {userData.nombre}
 									</p>
 									<button>
 										<IconShoppingCart stroke={2} className='text-white' />
@@ -168,13 +188,13 @@ const LandingPage = () => {
 								</div>
 							</>
 						) : (
-							<Link to="/login" className="text-white border-b-2 border-primary hover:border-white ">Iniciar Sesion</Link>
+							<Link to="/login" className="text-white border-b-2 border-primary hover:border-white flex ">
+								<IconLogin stroke={2} className='mr-2' /> <p>Iniciar Sesion</p>
+							</Link>
 						)}
 
 					</div>
 				</header>
-
-				{/* Contenido */}
 
 				{/* Menu horizontal */}
 				<nav id="menu-h" className="max-w-7xl mx-auto min-h-16 bg-black">
@@ -202,7 +222,6 @@ const LandingPage = () => {
 						<li><a href="#" className="text-white block py-4 px-6 text-lg">Contactenos</a></li>
 					</ul>
 				</nav>
-
 
 				<section className="px-4 py-24 mx-auto max-w-7xl">
 					<div className="w-full mx-auto text-left md:w-3/5 lg:w-2/5 md:text-center">
@@ -297,13 +316,13 @@ const LandingPage = () => {
 						<div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6'>
 							{fetchError && <p>{fetchError}</p>}
 							{productos && productos.map(producto => (
-									<PublicProductCard
-										key={producto.id}
-										id={producto.id}
-										tipo={producto.tipo}
-										nombre={producto.nombre}
-										precio={producto.precio}
-									/>
+								<PublicProductCard
+									key={producto.id}
+									id={producto.id}
+									tipo={producto.tipo}
+									nombre={producto.nombre}
+									precio={producto.precio}
+								/>
 							))}
 						</div>
 					</section>

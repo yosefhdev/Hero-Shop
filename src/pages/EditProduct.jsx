@@ -4,10 +4,42 @@ import { Link } from "react-router-dom";
 import supabase from "../supabase/client";
 import { IconX } from "@tabler/icons-react";
 import { IconPencil } from "@tabler/icons-react";
+import Loader from "../components/Loader";
 
 // eslint-disable-next-line react/prop-types
 const EditProduct = () => {
 	const [isAuthenticated, setIsAuthenticated] = useState(false);
+	const navigate = useNavigate();
+
+	useEffect(() => {
+		const fetchUserData = async () => {
+			const { data: { user } } = await supabase.auth.getUser();
+			if (user) {
+				console.log('user.id', user.id)
+				let { data, error } = await supabase
+					.from('usuarios')
+					.select("*")
+					.eq('id', user.id)
+
+				if (error) {
+					console.error('Error al cargar el usuario:', error.message);
+					return;
+				}
+
+				if (data) {
+					let rol = data[0].rol;
+					if (rol === 2) {
+						navigate('/access-denied')
+					}
+					setIsLoading(false);
+				}
+			}
+		};
+
+		if (isAuthenticated) {
+			fetchUserData();
+		}
+	}, [isAuthenticated, navigate]);
 
 	useEffect(() => {
 		const checkAuth = async () => {
@@ -29,7 +61,6 @@ const EditProduct = () => {
 		};
 	}, []);
 
-	const navigate = useNavigate();
 	const { id } = useParams();
 
 	const [fetchError, setFetchError] = useState(null);
@@ -153,7 +184,10 @@ const EditProduct = () => {
 		}
 	};
 
-	// Subir imagenes a supabase
+	const [isLoading, setIsLoading] = useState(true);
+	if (isLoading) {
+		return <Loader />
+	}
 
 	return (
 		<div className="bg-cover bg-center" style={{ backgroundImage: 'url("/src/assets/logos/efecto.png")' }}>
@@ -270,14 +304,14 @@ const EditProduct = () => {
 							</div>
 							<div className="flex justify-between">
 								<button type="submit" className="flex items-center px-4 py-2 border-2 border-black rounded bg-blue-500 text-white hover:bg-blue-600 transition-colors duration-200">
-              <IconPencil stroke={2} className="mr-1" />
-              Actualizar
-            </button>
+									<IconPencil stroke={2} className="mr-1" />
+									Actualizar
+								</button>
 								<Link to="/dashboard">
-                <button type="button" className="flex items-center px-4 py-2 border-2 border-black rounded bg-red-500 text-white hover:bg-red-600 transition-colors duration-200">
-                <IconX stroke={2} className="mr-1" />
-                Cancelar
-              </button>
+									<button type="button" className="flex items-center px-4 py-2 border-2 border-black rounded bg-red-500 text-white hover:bg-red-600 transition-colors duration-200">
+										<IconX stroke={2} className="mr-1" />
+										Cancelar
+									</button>
 								</Link>
 							</div>
 							{formError && <p className="">{formError}</p>}
