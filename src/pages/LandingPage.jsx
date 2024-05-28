@@ -15,7 +15,7 @@ import { IconSearch } from '@tabler/icons-react';
 import { IconTags } from '@tabler/icons-react';
 import { IconShoppingCart } from '@tabler/icons-react';
 import { IconLogout } from '@tabler/icons-react';
-
+import { IconLogin } from '@tabler/icons-react';
 const LandingPage = () => {
 
 	const navigate = useNavigate();
@@ -27,13 +27,33 @@ const LandingPage = () => {
 	useEffect(() => {
 		const fetchUserData = async () => {
 			const { data: { user } } = await supabase.auth.getUser();
-			setUserData(user);
+
+			if (user) {
+				console.log('user.id', user.id)
+				let { data, error } = await supabase
+					.from('usuarios')
+					.select("*")
+					.eq('id', user.id)
+
+				if (error) {
+					console.error('Error al cargar el usuario:', error.message);
+					return;
+				}
+
+				if (data) {
+					console.log('data', data[0]);
+					setUserData(data[0]);
+				}
+			}
 		};
 
 		if (isAuthenticated) {
 			fetchUserData();
 		}
-	}, [isAuthenticated, userData]);
+	}, [isAuthenticated]);
+
+
+
 
 	const [fetchError, setFetchError] = useState(null)
 	const [productos, setProductos] = useState(null)
@@ -157,7 +177,7 @@ const LandingPage = () => {
 							<>
 								<div className='flex gap-x-5'>
 									<p className='text-white'>
-										Bienvenido, {userData.user_metadata.name}
+										Bienvenido, {userData.nombre}
 									</p>
 									<button>
 										<IconShoppingCart stroke={2} className='text-white' />
@@ -168,13 +188,13 @@ const LandingPage = () => {
 								</div>
 							</>
 						) : (
-							<Link to="/login" className="text-white border-b-2 border-primary hover:border-white ">Iniciar Sesion</Link>
+							<Link to="/login" className="text-white border-b-2 border-primary hover:border-white flex ">
+								<IconLogin stroke={2} className='mr-2' /> <p>Iniciar Sesion</p>
+							</Link>
 						)}
 
 					</div>
 				</header>
-
-				{/* Contenido */}
 
 				{/* Menu horizontal */}
 				<nav id="menu-h" className="max-w-7xl mx-auto min-h-16 bg-black">
@@ -196,17 +216,16 @@ const LandingPage = () => {
 								<li><a href="#" className="text-white block py-2 px-6 text-lg">Vision</a></li>
 							</ul>
 						</li>
-						<li><a href="#" className="text-white block py-4 px-6 text-lg">Productos</a></li>
+						<li><Link to="/products" className="text-white block py-4 px-6 text-lg">Productos</Link></li>
 						<li><a href="#" className="text-white block py-4 px-6 text-lg">Ofertas</a></li>
 						<li><a href="#" className="text-white block py-4 px-6 text-lg">Garantia</a></li>
 						<li><a href="#" className="text-white block py-4 px-6 text-lg">Contactenos</a></li>
 					</ul>
 				</nav>
 
-
 				<section className="px-4 py-24 mx-auto max-w-7xl">
 					<div className="w-full mx-auto text-left md:w-3/5 lg:w-2/5 md:text-center">
-						<div className="mx-0 mb-6 avatar avatar-lg md:mx-auto"><img src="https://scontent.ftpq2-1.fna.fbcdn.net/v/t39.30808-6/342710836_217620224206157_8581303991229901859_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeH_QUvRTvDbjSzA-QjYJBBGss-tWy7PvG-yz61bLs-8b01fwOR5Dvm-BV7k7Vajeju7mhI7jlyfizfDibLvD0vA&_nc_ohc=BOUzh-kRTc4Q7kNvgG_XRdF&_nc_ht=scontent.ftpq2-1.fna&oh=00_AYDgVH5fNp7oNhWudhdDnDiDQpiC0JOxUKhTKJ5Ehe5mDg&oe=66489716" alt="Photo of Praveen Juge" /></div>
+						<div className="mx-0 mb-6 avatar avatar-lg md:mx-auto"><img src="https://scontent.ftpq2-1.fna.fbcdn.net/v/t39.30808-6/342710836_217620224206157_8581303991229901859_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeH_QUvRTvDbjSzA-QjYJBBGss-tWy7PvG-yz61bLs-8b01fwOR5Dvm-BV7k7Vajeju7mhI7jlyfizfDibLvD0vA&_nc_ohc=MBRCDGm-VusQ7kNvgGwQkpz&_nc_ht=scontent.ftpq2-1.fna&oh=00_AYAHkeuXLiRwWAiEHm-_CLbwlak02Rr68hja-RWD3yNe8w&oe=6656A716" alt="Photo of Praveen Juge" /></div>
 						<h1 className="mb-6 text-xl font-bold text-gray-900 md:leading-tight md:text-3xl">
 							“¡Bienvenidos a Hero-shop! Somos una tienda especializada en playeras estampadas.”
 						</h1>
@@ -215,40 +234,12 @@ const LandingPage = () => {
 
 					</div>
 				</section>
-				{/* Banner 
-
-			<section id="banner" className="max-w-7xl mx-auto min-h-[150px] bg-blue-900  overflow-hidden relative">
-      <div className="flex justify-center items-center h-full overflow-hidden">
-        <div className="max-w-6xl mx-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 w-full h-full">
-          <div className="relative overflow-hidden rounded-lg transform transition-transform duration-300 hover:scale-110">
-            <img src="https://c4.wallpaperflare.com/wallpaper/295/163/719/anime-anime-boys-picture-in-picture-kimetsu-no-yaiba-kamado-tanjir%C5%8D-hd-wallpaper-preview.jpg" alt="Frieren" className="object-cover w-full h-full" />
-          </div>
-          <div className="relative overflow-hidden rounded-lg transform transition-transform duration-300 hover:scale-110">
-            <img src="https://wallpapers.com/images/featured/anime-dbt18qjb7b1cstr1.jpg" alt="Naruto" className="object-cover w-full h-full" />
-          </div>
-          <div className="relative overflow-hidden rounded-lg transform transition-transform duration-300 hover:scale-110">
-            <img src="https://wallpapercave.com/wp/wp2912446.jpg" alt="Luffy" className="object-cover w-full h-full" />
-          </div>
-          <div className="relative overflow-hidden rounded-lg transform transition-transform duration-300 hover:scale-110">
-            <img src="https://p.im9.eu/hollow-bleach-kurosaki-ichigo-anime-1920x1080-wallpaper-hd.jpg" alt="Goku" className="object-cover w-full h-full" />
-          </div>
-          <div className="relative overflow-hidden rounded-lg transform transition-transform duration-300 hover:scale-110">
-            <img src="https://wallpapersmug.com/download/1920x1080/d55e88/satoru-gojo-4k.jpeg" alt="Ichigo" className="object-cover w-full h-full" />
-          </div>
-          <div className="relative overflow-hidden rounded-lg transform transition-transform duration-300 hover:scale-110">
-            <img src="https://i.pinimg.com/originals/47/24/3e/47243e1d51883c7982c681759c99b720.jpg" alt="Yuta" className="object-cover w-full h-full" />
-          </div>
-          
-        </div>
-      </div>
-    </section>
-*/}
 				{/* Separador de pagina */}
 				<div className="max-w-7xl mx-auto min-h-[5px] flex justify-center items-center h-8 bg-blue-500">
 					<div className="border-t border-blue-500 w-full"></div>
 				</div>
 				<section id="banner" className="max-w-7xl mx-auto min-h-[150px] bg-blue-900  overflow-hidden relative">
-					<img src="https://www.blog.doto.com.mx/wp-content/uploads/2024/05/hot_sale.png" alt="Ichigo" className="object-cover w-full h-full" />
+					<img src="https://media.vandalsports.com/master/12-2021/20211216124331_1.jpg" alt="Ichigo" className="object-cover w-full h-full" />
 				</section>
 
 				{/* Separador de pagina */}
@@ -364,13 +355,29 @@ const LandingPage = () => {
 								<p>
 									Puedes seguir las redes sociales de HeroShop y suscribirte a su boletín informativo para recibir actualizaciones sobre nuevos productos, promociones y eventos especiales
 								</p>
-
-
+								<h5 className="mt-10 mb-3 font-semibold text-gray-900">Donde esta Ubicada Hero Shop?</h5>
+								<p>
+									Nos encontramos en Tepic Nayarit Centro, México, 63136
+								</p>
+								<div className="flex justify-center py-8">
+									<div className="w-full max-w-4xl">
+										<iframe 
+										src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1856.0481837457608!2d-104.90924776118366!3d21.503944990575125!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x842736f1bbc629c5%3A0xf8dafe44d09a6c83!2sIndependencia%2C%2063136%20Tepic%2C%20Nay.!5e0!3m2!1ses!2smx!4v1716756965468!5m2!1ses!2smx" 
+										width="600" 
+										height="450" 
+										style={{ border: 0 }} 
+										allowFullScreen="" 
+										loading="lazy" 
+										referrerPolicy="no-referrer-when-downgrade"
+										className="w-full h-96"
+										></iframe>
+									</div>
+								</div>
 							</div>
 						</div>
 					</section>
 
-
+							
 
 					{/* Footer */}
 					<footer className="flex flex-col items-center justify-between px-4 py-12 mx-auto max-w-7xl md:flex-row">
@@ -429,9 +436,6 @@ const LandingPage = () => {
 							</a>
 						</div>
 					</footer>
-
-
-
 				</div>
 			</div>
 		</>

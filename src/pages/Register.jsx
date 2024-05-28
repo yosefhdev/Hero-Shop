@@ -1,9 +1,10 @@
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { useState } from "react"
 import supabase from "../supabase/client"
+import { IconHome } from '@tabler/icons-react';
 
 const Register = () => {
-
+	let navigate = useNavigate();
 	const [formData, setFormData] = useState({
 		nombre: '',
 		apellido_paterno: '',
@@ -57,9 +58,8 @@ const Register = () => {
 
 	async function handleSubmit(e) {
 		e.preventDefault();
-
 		console.log('formData', formData);
-	
+
 
 		const errors = validateFields();
 		setErrors(errors);
@@ -69,45 +69,41 @@ const Register = () => {
 				// Registrar al usuario con Supabase Auth
 				const { data, error: signUpError } = await supabase.auth.signUp({
 					email: formData.correo,
-					password: formData.password,
-					options: {
-						data: {
-							name: formData.nombre,
-							apellido_P: formData.apellido_paterno,
-							apellido_M: formData.apellido_materno,
-							rol: 'cliente'
-						},
-					},
+					password: formData.password
 				});
-
 				if (signUpError) {
-					console.error('Error al registrar:', signUpError.message);
-				} else if (data) {
-					// Verificar si se obtuvo un usuario
-					// Insertar el usuario en la tabla 'usuarios'
+					console.error('Error al registrar al usuario:', signUpError.message);
+					return;
+				}
 
-					const { error: insertError } = await supabase
+				if (data) {
+					console.log('Usuario registrado exitosamente.', data);
+					console.log(data.user.id);
+
+					const { dataNewUser, errorNewUser } = await supabase
 						.from('usuarios')
 						.insert([
 							{
-								auth_id: data.id,
-								email: formData.correo,
-								pass: formData.password,
+								id: data.user.id,
 								nombre: formData.nombre,
 								apellido_paterno: formData.apellido_paterno,
 								apellido_materno: formData.apellido_materno,
-								rol: 2, // Rol por defecto: cliente
-							},
+								email: formData.correo,
+								rol: 2
+							}
 						])
-						.select();
+						.select()
 
-					if (insertError) {
-						console.error('Error al insertar en la tabla usuarios:', insertError.message);
-					} else {
-						console.log('Usuario registrado y guardado correctamente');
+					console.log('dataNewUser', dataNewUser);
+					console.log('errorNewUser', errorNewUser);
+
+					if (errorNewUser) {
+						console.error('Error al registrar al usuario:', errorNewUser.message);
+						return;
 					}
-				} else {
-					console.error('No se obtuvo un usuario después del registro');
+					console.log('Usuario registrado exitosamente.', dataNewUser);
+					navigate('/login');
+
 				}
 			} catch (error) {
 				console.log('error', error);
@@ -117,9 +113,13 @@ const Register = () => {
 
 	return (
 		<div className="m-5">
-			<Link to={'/'} className="bg-primary text-white px-2 py-1 rounded-xl">
-				Volver al Inicio
-			</Link>
+			<button
+				onClick={() => navigate('/')}
+				className={`bg-primary text-white font-bold py-2 px-4 rounded-full cursor-pointer border-2
+							hover:bg-blue-900 flex
+							active:bg-white active:text-primary active:border-2 active:border-primary`}>
+				<IconHome stroke={2} className="text-white mr-2" /> <p>Volver al Inicio</p>
+			</button>
 			<div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
 				<div className="flex">
 					<div className="bg-white rounded-lg shadow-md p-10">
@@ -156,7 +156,9 @@ const Register = () => {
 								onChange={handleChange} />
 							{errors.password_confirmation && <p className="text-red-500 text-xs">{errors.nombre}</p>}
 
-							<input type="submit" className="bg-blue-600 text-white font-semibold py-2 px-4 rounded-full w-full" />
+							<input value="Registrarse" type="submit"
+								className={`bg-primary text-white font-bold py-2 px-4 rounded-full w-full cursor-pointer border-2
+										hover:bg-blue-900 active:bg-white active:text-primary active:border-2 active:border-primary`} />
 							Ya tienes una cuenta? &nbsp;
 							<Link to={'/login'} className="text-primary hover:border-b hover:border-primary">
 								Iniciar Sesion
