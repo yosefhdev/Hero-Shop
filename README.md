@@ -1,6 +1,6 @@
 ![image](https://github.com/yosefhdev/Hero-Shop/assets/167670949/af55fbc8-f1cc-43bd-80e2-9a154104ac50)
 
-# Nombre del Proyecto
+# Hero-Shop
 
 Este es un proyecto creado con Vite y React. Vite es una herramienta de construcción que ayuda a configurar proyectos de desarrollo web de manera rápida y eficiente, mientras que React es una popular biblioteca de JavaScript para construir interfaces de usuario.
 
