@@ -7,6 +7,8 @@ import { useAuth } from './auth';
 
 import { IconUserShield } from '@tabler/icons-react';
 import { IconUser } from '@tabler/icons-react';
+import { IconSearch } from '@tabler/icons-react';
+import { IconZoomReset } from '@tabler/icons-react';
 
 const TipoUsuario = () => {
 	const navigate = useNavigate();
@@ -48,13 +50,15 @@ const TipoUsuario = () => {
 		}
 	}, [isAuthenticated, navigate]);
 
+
+
 	useEffect(() => {
 		async function fetchUsers() {
 			try {
 				const { data, error } = await supabase
 					.from('usuarios')
 					.select('*')
-					.neq('id', userData.id);
+					.neq('id', userData.id)
 
 				if (error) {
 					console.error('Error al obtener usuarios:', error.message);
@@ -93,6 +97,49 @@ const TipoUsuario = () => {
 		}
 		setIsLoadingRol(false);
 	};
+	
+	const [searchTerm, setSearchTerm] = useState('');
+	async function handleSearch(e) {
+		e.preventDefault();
+		try {
+			const { data, error } = await supabase
+				.from('usuarios')
+				.select('*')
+				.neq('id', userData.id)
+				.ilike('email', `%${searchTerm}%`)
+
+			if (error) {
+				console.error('Error al obtener usuarios:', error.message);
+				return;
+			}
+
+			setUsers(data);
+		} catch (error) {
+			console.error('Error al obtener usuarios:', error.message);
+		}
+	}
+
+	async function resetTabla(e) {
+		e.preventDefault();
+
+		setSearchTerm('');
+		
+		try {
+			const { data, error } = await supabase
+				.from('usuarios')
+				.select('*')
+				.neq('id', userData.id)
+
+			if (error) {
+				console.error('Error al obtener usuarios:', error.message);
+				return;
+			}
+
+			setUsers(data);
+		} catch (error) {
+			console.error('Error al obtener usuarios:', error.message);
+		}
+	}
 
 	const [isLoading, setIsLoading] = useState(true);
 	if (isLoading) {
@@ -116,12 +163,19 @@ const TipoUsuario = () => {
 					<div className="pb-4 bg-white ">
 						<label htmlFor="table-search" className="sr-only">Search</label>
 						<div className="relative mt-1">
-							<div className="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
-								<svg className="w-4 h-4 text-gray-500 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-									<path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
-								</svg>
-							</div>
-							<input type="text" id="table-search" className="block py-1 ps-10 text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 " placeholder="Buscar por mail" />
+							<form onSubmit={handleSearch} className='flex '>
+								<input type="text" id="table-search"
+									onChange={(e) => setSearchTerm(e.target.value)}
+									className="block rounded-s-lg py-1 px-3 text-gray-900 border border-gray-300 w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 "
+									placeholder="Buscar por mail"
+									value={searchTerm} />
+								<button type='submit' className='bg-primary rounded-e-lg px-2'>
+									<IconSearch className='size-5 text-white' stroke={3} size='2rem' style={{ color: '#fff' }} />
+								</button>
+								<button type='button' onClick={resetTabla} className='bg-primary rounded-lg px-2 ml-auto' title='Resetear tabla'>
+									<IconZoomReset  className='size-5 text-white' stroke={3} size='2rem' style={{ color: '#fff' }} />
+								</button>
+							</form>
 						</div>
 					</div>
 					<table className="w-full text-sm text-left rtl:text-right text-gray-500 ">
