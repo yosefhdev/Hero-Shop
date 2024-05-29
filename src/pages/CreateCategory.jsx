@@ -45,7 +45,7 @@ const Dashboard = () => {
 
 	const [formError, setFormError] = useState('')
 	console.log('image', image);
-    
+    const [imageU, setImageU] = useState(null);
 
 	const handleSubmit = async (e) => {
         e.preventDefault()
@@ -108,7 +108,9 @@ const Dashboard = () => {
 		const{data}=await supabase
 		.from('categoria_productos')
 		.select('*')
+		.order('id', { ascending: true });
 		setCategoria2(data)
+
 	}
 	const [categoriaImp, setCategoria2] = useState([]);
     //Borrar los datos
@@ -127,8 +129,8 @@ const Dashboard = () => {
 			console.log(data)
 		}
 	}
-	//Cerrar sesion
-	const handleLogOut = async () => {
+//Cerrar sesion
+const handleLogOut = async () => {
 		const { error } = await supabase.auth.signOut();
 		if (error) {
 			console.error('Error al cerrar sesión:', error.message);
@@ -143,11 +145,82 @@ const Dashboard = () => {
 	const [image3, setImage3] = useState(null)
 
 //Actualizar categoria
-function displayCategory(){
+const [categoriaU, setCategoriaU] = useState('');
+const [imageNameU, setImageNameU] = useState('');
+const [selectedIdU, setSelectedIdU] = useState(0);
+const [formErrorU, setFormErrorU] = useState('');
 
-}
-/*Prueba categoria elementos*/
+// Función para mostrar la categoría en el formulario
+const displayCategoryU = (categoria) => {
+    setSelectedIdU(categoria.id);
+    setCategoriaU(categoria.categoria);
+    setImageNameU(categoria.img_url ? categoria.img_url.split('/').pop() : '');
+  };
 
+
+// Función para manejar el envío del formulario
+const handleUpdateU = async (e) =>  {
+    e.preventDefault();
+
+		// Verificar que se haya seleccionado una categoría para actualizar
+		if (selectedIdU == null) {
+			setFormErrorU('No se ha seleccionado ninguna categoría para actualizar');
+			return;
+		  }
+		
+		  let imageUrl = '';
+		
+		  // Subir la nueva imagen si se seleccionó una
+		  if (imageU) {
+			const timestamp = new Date().getTime();
+			const extension = imageU.name.split('.').pop();
+			const uniqueName = `${timestamp}_${imageU.name.replace(`.${extension}`, '')}`;
+		
+			const { data: uploadData, error: uploadError } = await supabase.storage
+			  .from('imagenes_category')
+			  .upload(`${uniqueName}`, imageU);
+		
+			if (uploadError) {
+			  setFormErrorU('Error al subir la imagen');
+			  console.error('Error al subir la imagen:', uploadError.message);
+			  return;
+			} else {
+			  imageUrl = `https://qcuiowxnmiamysnjtwto.supabase.co/storage/v1/object/public/${uploadData.fullPath}`;
+			}
+		  } else {
+			// Si no se seleccionó una nueva imagen, usar la URL existente
+			imageUrl = imageNameU;
+		  }
+		
+		  try {
+			// Actualizar la categoría en Supabase
+			const { data: updatedData, error: updateError } = await supabase
+			  .from('categoria_productos')
+			  .update({ categoria: categoriaU, img_url: imageUrl })
+			  .eq('id', selectedIdU);
+			  
+			fetchCategories()
+			if (updateError) {
+			  setFormErrorU('Error al actualizar la categoría');
+			  console.error('Error al actualizar la categoría:', updateError);
+			  return;
+			}
+		
+			// Resetear el formulario después de la actualización
+			setSelectedIdU(null);
+			setCategoriaU('');
+			setImageU(null);
+			setImageNameU('');
+			setFormErrorU('');
+		
+			// Realizar alguna acción adicional con los datos actualizados
+			console.log('Categoría actualizada con éxito:', updatedData);
+		  } catch (error) {
+			console.error('Error al actualizar la categoría:', error);
+			setFormErrorU('Error al actualizar la categoría');
+		  }
+
+  };
 	return (
 		<>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
@@ -207,7 +280,7 @@ function displayCategory(){
 									<li className='list-style: none'><a className='no-underline text-[1.3rem] text-[color:var(--background-color)] font-semibold uppercase relative after:w-6 after:h-px after:bg-[color:var(--Blue-label-de-jonny-walker)] after:absolute after:bottom-[-3px] after:-translate-x-2/4 after:translate-y-2/4 after:opacity-0 after:transition-all after:duration-[0.3s] after:ease-[ease] after:left-2/4 hover:after:opacity-100 hover:text-[color:var(--Blue-label-de-jonny-walker)]' href="#">Venta</a></li>
 									<li className='list-style: none'><a className='no-underline text-[1.3rem] text-[color:var(--background-color)] font-semibold uppercase relative after:w-6 after:h-px after:bg-[color:var(--Blue-label-de-jonny-walker)] after:absolute after:bottom-[-3px] after:-translate-x-2/4 after:translate-y-2/4 after:opacity-0 after:transition-all after:duration-[0.3s] after:ease-[ease] after:left-2/4 hover:after:opacity-100 hover:text-[color:var(--Blue-label-de-jonny-walker)]' href="#">Devoluciones</a></li>
 									<li className='list-style: none'><a className='no-underline text-[1.3rem] text-[color:var(--background-color)] font-semibold uppercase relative after:w-6 after:h-px after:bg-[color:var(--Blue-label-de-jonny-walker)] after:absolute after:bottom-[-3px] after:-translate-x-2/4 after:translate-y-2/4 after:opacity-0 after:transition-all after:duration-[0.3s] after:ease-[ease] after:left-2/4 hover:after:opacity-100 hover:text-[color:var(--Blue-label-de-jonny-walker)]' href="#">Quejas/sugerencias</a></li>
-									<li className='list-style: none'><a className='no-underline text-[1.3rem] text-[color:var(--background-color)] font-semibold uppercase relative after:w-6 after:h-px after:bg-[color:var(--Blue-label-de-jonny-walker)] after:absolute after:bottom-[-3px] after:-translate-x-2/4 after:translate-y-2/4 after:opacity-0 after:transition-all after:duration-[0.3s] after:ease-[ease] after:left-2/4 hover:after:opacity-100 hover:text-[color:var(--Blue-label-de-jonny-walker)]' href="#">Usuarios</a></li>
+									<li className='list-style: none'><a className='no-underline text-[1.3rem] text-[color:var(--background-color)] font-semibold uppercase relative after:w-6 after:h-px after:bg-[color:var(--Blue-label-de-jonny-walker)] after:absolute after:bottom-[-3px] after:-translate-x-2/4 after:translate-y-2/4 after:opacity-0 after:transition-all after:duration-[0.3s] after:ease-[ease] after:left-2/4 hover:after:opacity-100 hover:text-[color:var(--Blue-label-de-jonny-walker)]' href="/user-roles">Usuarios</a></li>
 								</ul>
 
 
@@ -215,16 +288,8 @@ function displayCategory(){
 						</div>
 					</div>
 				</header>
-				{/*h-[60rem] flex justify-center items-center bg-cover bg-center bg-[linear-gradient(100deg,#000000,#00000020),url("https://elviajerofeliz.com/wp-content/uploads/2020/05/Por-qu%C3%A9-Tokio-es-una-de-las-ciudades-m%C3%A1s-sorprendentes.jpg")]*/}
 
-				{/*w-[40rem] h-[24rem] ml-auto mr-[5rem] bg-slate-800 border border-slate-400 rounded-md p-10 shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-30 relative*/}
-				{/*text-4xl text-white font-bold text-center mb-6 font-[Poppins]*/}
-				{/*my-5 block w-full py-2.3 px-0 text-4xl text-white bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:text-white focus:border-blue-600 peer*/}
-
-{/*Parte del formulario de categoria*/}
-		<main className="main-content"> {/*[linear-gradient(100deg,#000000,#00000020)
-			bg-[url("https://elviajerofeliz.com/wp-content/uploads/2020/05/Por-qu%C3%A9-Tokio-es-una-de-las-ciudades-m%C3%A1s-sorprendentes.jpg")]
-			*/}
+		<main className="main-content"> 
 	    <h1 className="text-center my-5 font-medium text-5xl text-[color:var(--red-color)]">Categorias disponibles</h1>
 		<div className='flex justify-center'>
 		<form action=""> 
@@ -264,7 +329,8 @@ function displayCategory(){
                                     name="file"
                                     id="file"
 									class="text-[#fff] my-3"
-                                    onChange={(e) => setImage(e.target.files[0])}
+                                    
+									onChange={(e) => setImage(e.target.files[0])}
                                 />
                             </div>
 		<div className='flex justify-center'>
@@ -273,10 +339,6 @@ function displayCategory(){
           </button>
 		  </div>
 		  {formError && <p className="">{formError}</p>}
-
-
-		
-		
         </form>
       </div>
 <br />
@@ -287,29 +349,33 @@ function displayCategory(){
 	  <div   className=" flex flex-col items-center h-[195px] w-90 rounded-md px-6 py-5 mr-16 shadow-lg  backdrop-blur-lg relative bg-[var(--Orange-color)]">
         <h1 className="text-4xl text-white  text-center mb-6">Actualizar</h1>
 
-        <form action="#" onSubmit={handleSubmit}>
+        <form action="#" onSubmit={handleUpdateU}>
           
           <div className="relative my-4">
             <input
-              id="categoria"
-              name="categoria"
+              id="categoria2"
+              name="categoria2"
               className="block w-full py-1 px-0 text-lg text-white bg-transparent border-0 border-b-2 border-white appearance-none focus:outline-none focus:ring-0 focus:border-[#e10c0c] peer"
               placeholder=" " 
-			  value={categoria} onChange={(e) => setCategoria3(e.target.value)}
-			  defaultValue={categoria.categoria} 
-            />
-            <label htmlFor="categoria" className="absolute text-2xl  text-white duration-300 transform -translate-y-6 scale-75 top-0 -z-10 origin-[0] peer-focus:left-0 peer-focus:-blue peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Nombre</label>
-          </div>
+			  value={categoriaU}
+              onChange={(e) => setCategoriaU(e.target.value)}
+            />{/*value={categoria} onChange={(e) => setCategoria3(e.target.value)} */}
+			  {/*defaultValue={categoria.categoria}  */}
+            <label htmlFor="categoria2" className="absolute text-2xl  text-white duration-300 transform -translate-y-6 scale-75 top-0 -z-10 origin-[0] peer-focus:left-0 peer-focus:-blue peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Nombre</label>
+          
+		  </div>
 		  <div className="w-full">
                                 <h1 className="text-white text-2xl ">Subir Imagen</h1>
                                 <input
                                     type="file"
-                                    accept=".png, .jpg, .jpeg"
+                                    accept=".png, .jpg, .jpeg .webp"
                                     name="file"
                                     id="file"
 									class="text-[#fff] my-3"
-                                    onChange={(e) => setImage3(e.target.files[0])}
-									defaultValue={image}
+									onChange={(e) => {
+                                    setImageU(e.target.files[0]);
+                                    setImageNameU(e.target.files[0]?.name || '');
+									}}
                                 />
                             </div>
 		<div className='flex justify-center'>
@@ -317,12 +383,8 @@ function displayCategory(){
            Confirmar
           </button>
 		  </div>
-		  {formError && <p className="">{formError}</p>}
-
-
-		
-		
-        </form>
+		  {formError && <p className="text-red-500">{formErrorU}</p>}	
+</form>
       </div> </div>
 
 	  
@@ -331,11 +393,11 @@ function displayCategory(){
 	
 
 	<div className='flex flex-col items-center mr-1 '   >
-		<table className='max-w-[900px] mx-auto text-[color:var(--background-color)] table-auto bg-[var(--primary-color)] rounded-[8px]'>
+		<table className=' text-9x1 max-w-[900px] mx-auto text-[color:var(--background-color)] table-auto bg-[var(--primary-color)] rounded-[8px]'>
 			<thead>
 				<tr>
-					<th className='border p-2 border-solid border-white'>ID</th>
-					<th className='border p-2 border-solid border-white'>Nombre</th>
+					<th className=' border p-2 border-solid border-white'>ID</th>
+					<th className=' border p-2 border-solid border-white'>Nombre</th>
                     <th className='border p-2 border-solid border-white'>Imagen</th>
 					<th className='border p-2 border-solid border-white'>Acciones</th>
 
@@ -351,7 +413,7 @@ function displayCategory(){
 				    <td className='border p-2 border-solid border-white'>
 						<button className="mx-1 bg-[var(--Blue-label-de-jonny-walker)] text-[color:var(--background-color)] text-[1.1rem] capitalize cursor-pointer px-3 py-[0.2rem] rounded-[2rem] hover:bg-[var(--red-color)] hover:text-[var(--background-color)] active:bg-[var(--primary-color)] active:text-[var(--Blue-label-de-jonny-walker)]" onClick={()=>{deleteCategory(categoria.id)}}>Borrar</button>
 						
-						<button className="mx-1 bg-[var(--Color-Paleta-2)] text-[color:var(--background-color)] text-[1.1rem] capitalize cursor-pointer px-3 py-[0.2rem] rounded-[2rem] hover:bg-[var(--Orange-color)] hover:text-[var(--background-color)] active:bg-[var(--primary-color)] active:text-[var(--Blue-label-de-jonny-walker)]" onClick={()=>{displayCategory(categoria.id)}}>Actualizar</button>						
+						<button className="mx-1 bg-[var(--Color-Paleta-2)] text-[color:var(--background-color)] text-[1.1rem] capitalize cursor-pointer px-3 py-[0.2rem] rounded-[2rem] hover:bg-[var(--Orange-color)] hover:text-[var(--background-color)] active:bg-[var(--primary-color)] active:text-[var(--Blue-label-de-jonny-walker)]"  onClick={() => displayCategoryU(categoria)}>Actualizar</button>						
 						</td>
 				</tr>
 				)}
