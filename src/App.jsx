@@ -15,6 +15,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import ProductDetail from './pages/ProductDetail';
 import TipoUsuario from "./pages/TipoUsuario";
 import Loader from './components/Loader';
+import PayDetails from './pages/PayDetails';
 
 function App() {
 
@@ -33,6 +34,7 @@ function App() {
 					<Route path="/register" element={<Register />} />
 					<Route path="/loader" element={<Loader />} />
 					<Route path="/products/:productId" element={<ProductDetail />} />
+					<Route path="/payment" element={<PayDetails />} />
 					<Route
 						path="/dashboard"
 						element={
