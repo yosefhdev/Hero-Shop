@@ -150,7 +150,7 @@ const TipoUsuario = () => {
 		<div className="flex justify-center p-5">
 			<div className="relative w-full max-w-4xl">
 				<button
-					onClick={() => navigate('/')}
+					onClick={() => navigate('/dashboard')}
 					className={`bg-primary text-white text-sm font-bold py-2 px-4 rounded-lg cursor-pointer border-2 border-primary
 							hover:bg-blue-900 flex mb-5
 							active:bg-white active:text-primary active:border-2 active:border-primary`}>
