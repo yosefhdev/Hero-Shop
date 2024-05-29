@@ -39,7 +39,6 @@ const Dashboard = () => {
 	
 	
 
-	const [fetchError, setFetchError] = useState(null)
     const [categoria, setCategoria] = useState('')
 	const [image, setImage] = useState(null)
 
@@ -140,9 +139,7 @@ const handleLogOut = async () => {
 		}
 		navigate('/')
 	}
-	const [categoria3, setCategoria3] = useState('')
-	const [categoriaImp3, setCategoriax] = useState([]);
-	const [image3, setImage3] = useState(null)
+
 
 //Actualizar categoria
 const [categoriaU, setCategoriaU] = useState('');
