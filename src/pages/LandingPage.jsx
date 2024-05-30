@@ -140,6 +140,21 @@ const LandingPage = () => {
 		navigate('/')
 	}
 
+
+	const [showModal, setShowModal] = useState(false);
+
+    // Función para abrir el modal
+    const openModal = () => {
+        setShowModal(true);
+    };
+
+    // Función para cerrar el modal
+    const closeModal = () => {
+        setShowModal(false);
+    };
+
+
+
 	return (
 
 		<>
@@ -194,6 +209,46 @@ const LandingPage = () => {
 						)}
 
 					</div>
+
+
+					{showModal && (
+                    <div id="deleteModal" tabIndex="-1" aria-hidden="true" className="bg-black/50 fixed inset-0 flex z-50 justify-center items-center w-full md:inset-0 h-modal md:h-full">
+                        <div className="relative p-4 w-full max-w-md h-full md:h-auto">
+                            {/* <!-- Modal content --> */}
+                            <div className="relative p-4 text-center bg-white rounded-lg shadow sm:p-5" >
+                                <button onClick={closeModal} type="button" className="text-gray-400 absolute top-2.5 right-2.5 bg-color red hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" data-modal-toggle="deleteModal">
+                                    Cerrar
+                                    
+                                </button>
+
+								
+                                <p className="border border-gray-300 rounded-md px-4 py-2 w-full">Gallinas de colores</p>
+									
+								<div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6'>
+								{fetchError && <p>{fetchError}</p>}
+							{productos && productos.map(producto => (
+								<PublicProductCard
+									key={producto.id}
+									id={producto.id}
+									tipo={producto.tipo}
+									nombre={producto.nombre}
+									precio={producto.precio}
+								/>
+							))}
+								</div>
+
+                                <div className="flex justify-center items-center space-x-4">
+                                    <button onClick={closeModal} data-modal-toggle="deleteModal" type="button" className="py-2 px-3 text-sm font-medium text-gray-500 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 hover:text-gray-900 focus:z-10">
+                                        cancelar
+                                    </button>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+
 				</header>
 
 				{/* Menu horizontal */}
@@ -220,6 +275,7 @@ const LandingPage = () => {
 						<li><a href="#" className="text-white block py-4 px-6 text-lg">Ofertas</a></li>
 						<li><a href="#" className="text-white block py-4 px-6 text-lg">Garantia</a></li>
 						<li><a href="#" className="text-white block py-4 px-6 text-lg">Contactenos</a></li>
+						<button onClick={openModal} className="text-white block py-4 px-6 text-lg">Carrito </button>
 					</ul>
 				</nav>
 
