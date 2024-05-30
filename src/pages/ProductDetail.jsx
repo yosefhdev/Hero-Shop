@@ -6,6 +6,10 @@ import Loader from "../components/Loader";
 import { useAuth } from './auth';
 import { useNavigate } from 'react-router-dom'
 
+
+const Carrito =[];
+
+
 const ProductDetail = () => {
 	const { productId } = useParams();
 	const [product, setProduct] = useState(null);
@@ -71,6 +75,12 @@ const ProductDetail = () => {
 		return <p className="text-center">Producto no encontrado</p>;
 	}
 
+	function AgregarCarrito ( ){
+		Carrito.push(productId);
+		console.log(Carrito);
+	};
+
+	
 	return (
 		<div className="bg-cover bg-center min-h-screen" style={{ backgroundImage: 'url("/src/assets/logos/efecto.png")' }}>
 			<div className="flex justify-center items-center h-screen">
@@ -100,11 +110,11 @@ const ProductDetail = () => {
 								<p className="border border-gray-300 rounded-md px-4 py-2 w-full">{product.descripcion}</p>
 							</div>
 							<div className="flex flex-row gap-x-5">
-								<button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+								<button  onClick={AgregarCarrito} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
 									Agregar al carrito
 								</button>
 								<Link to="/">
-									<button className="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+									<button  className="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
 										Volver
 									</button>
 								</Link>
