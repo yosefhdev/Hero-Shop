@@ -16,50 +16,82 @@ import { IconTags } from '@tabler/icons-react';
 import { IconShoppingCart } from '@tabler/icons-react';
 import { IconLogout } from '@tabler/icons-react';
 import { IconLogin } from '@tabler/icons-react';
+import { IconTrash } from '@tabler/icons-react';
+
 const LandingPage = () => {
 
+	// eslint-disable-next-line no-unused-vars
 	const navigate = useNavigate();
 
 	const { isAuthenticated } = useAuth();
 	const [userData, setUserData] = useState(null);
 
+	const [fetchCartError, setFetchCartError] = useState(null)
+	const [productosCart, setProductosCart] = useState(null)
 
 	useEffect(() => {
 		const fetchUserData = async () => {
-			const { data: { user } } = await supabase.auth.getUser();
+			const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+			if (authError) {
+				console.error('Error al obtener el usuario:', authError.message);
+				return;
+			}
 
 			if (user) {
-				console.log('user.id', user.id)
-				let { data, error } = await supabase
+				const { data: userData, error: userError } = await supabase
 					.from('usuarios')
 					.select("*")
-					.eq('id', user.id)
+					.eq('id', user.id);
 
-				if (error) {
-					console.error('Error al cargar el usuario:', error.message);
+				if (userError) {
+					console.error('Error al cargar el usuario:', userError.message);
 					return;
 				}
 
-				if (data) {
-					console.log('data', data[0]);
-					setUserData(data[0]);
+				if (userData && userData.length > 0) {
+					setUserData(userData[0]);
+					const { data: cartData, error: cartError } = await supabase
+						.from('carrito')
+						.select(`
+							id,
+							producto_id,
+							cantidad,
+							productos (
+								id,
+								nombre,
+								precio,
+								img_url
+							)
+						`)
+						.eq('usuario_id', user.id);
+
+					if (cartError) {
+						setFetchCartError("Error al cargar el carrito");
+						console.error('Error al cargar el carrito:', cartError.message);
+						setProductosCart(null);
+					} else {
+						setProductosCart(cartData);
+						setFetchCartError(null);
+					}
 				}
+			} else {
+				console.warn('Usuario no autenticado. Redirigiendo a la página de login.');
+				navigate('/login');
 			}
 		};
 
 		if (isAuthenticated) {
 			fetchUserData();
 		}
-	}, [isAuthenticated]);
-
-
-
+	}, [isAuthenticated, navigate]);
 
 	const [fetchError, setFetchError] = useState(null)
 	const [productos, setProductos] = useState(null)
 	const [orderBy, setOrderBy] = useState('created_at')
 	const [asc, setAsc] = useState(true)
 	const [articulo, setArticulo] = useState('')
+
 
 	const handleOrder = (order) => {
 		if (orderBy === order) {
@@ -129,6 +161,63 @@ const LandingPage = () => {
 
 	}, [orderBy, asc, articulo])
 
+
+	let totalCart = 0;
+
+
+	// useEffect(() => {
+
+	// 	const fetchCart = async () => {
+	// 		const { data, error } = await supabase
+	// 			.from('carrito')
+	// 			.select(`
+	// 				id,
+	// 				producto_id,
+	// 				cantidad,
+	// 				productos (
+	// 					id,
+	// 					nombre,
+	// 					precio,
+	// 					img_url
+	// 				)
+	// 			`)
+	// 			.eq('usuario_id', userData.id)
+
+	// 		if (error) {
+	// 			setFetchCartError("Error al cargar el Carrito")
+	// 			console.log('error', error)
+	// 			setProductosCart(null)
+	// 		}
+
+	// 		if (data) {
+	// 			setProductosCart(data)
+	// 			setFetchCartError(null)
+	// 		}
+	// 	}
+	// 	fetchCart()
+	// }, [userData])
+
+
+	async function handleDeleteProductCart(id) {
+		const { error } = await supabase
+			.from('carrito')
+			.delete()
+			.eq('id', id)
+
+		if (error) {
+			console.log('error', error)
+		} else {
+			console.log('Producto eliminado del carrito')
+		}
+
+	}
+
+	if (productosCart) {
+		productosCart.forEach(item => {
+			totalCart += item.productos.precio * item.cantidad
+		})
+	}
+
 	const handleLogOut = async () => {
 		const { error } = await supabase.auth.signOut();
 		if (error) {
@@ -140,20 +229,20 @@ const LandingPage = () => {
 		navigate('/')
 	}
 
-
 	const [showModal, setShowModal] = useState(false);
 
-    // Función para abrir el modal
-    const openModal = () => {
-        setShowModal(true);
-    };
+	// Función para abrir el modal
+	const openModal = () => {
+		setShowModal(true);
+	};
 
-    // Función para cerrar el modal
-    const closeModal = () => {
-        setShowModal(false);
-    };
+	// Función para cerrar el modal
+	const closeModal = () => {
+		setShowModal(false);
+	};
 
-
+	// console.log('isAuthenticated', isAuthenticated)
+	// console.log('userData', userData)
 
 	return (
 
@@ -194,7 +283,7 @@ const LandingPage = () => {
 									<p className='text-white'>
 										Bienvenido, {userData.nombre}
 									</p>
-									<button>
+									<button onClick={openModal}>
 										<IconShoppingCart stroke={2} className='text-white' />
 									</button>
 									<button onClick={handleLogOut}>
@@ -212,41 +301,86 @@ const LandingPage = () => {
 
 
 					{showModal && (
-                    <div id="deleteModal" tabIndex="-1" aria-hidden="true" className="bg-black/50 fixed inset-0 flex z-50 justify-center items-center w-full md:inset-0 h-modal md:h-full">
-                        <div className="relative p-4 w-full max-w-md h-full md:h-auto">
-                            {/* <!-- Modal content --> */}
-                            <div className="relative p-4 text-center bg-white rounded-lg shadow sm:p-5" >
-                                <button onClick={closeModal} type="button" className="text-gray-400 absolute top-2.5 right-2.5 bg-color red hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" data-modal-toggle="deleteModal">
-                                    Cerrar
-                                    
-                                </button>
+						<div id="deleteModal" tabIndex="-1" aria-hidden="true"
+							className="bg-black/50 fixed inset-0 flex z-50 justify-center items-center w-full h-modal ">
+							<div className="relative p-4 w-full max-w-md h-full md:h-auto">
+								{/* <!-- Modal content --> */}
+								<div className="relative p-4 text-center bg-white rounded-lg shadow sm:p-5" >
 
-								
-                                <p className="border border-gray-300 rounded-md px-4 py-2 w-full">Gallinas de colores</p>
-									
-								<div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6'>
-								{fetchError && <p>{fetchError}</p>}
-							{productos && productos.map(producto => (
-								<PublicProductCard
-									key={producto.id}
-									id={producto.id}
-									tipo={producto.tipo}
-									nombre={producto.nombre}
-									precio={producto.precio}
-								/>
-							))}
+									<p className="text-xl font-bold border border-gray-300 rounded-md px-4 py-2 w-full">
+										Carrito
+									</p>
+
+									<div className='grid gap-1 py-2'>
+										{fetchCartError && <p>{fetchCartError}</p>}
+										<div className='flex items-center gap-2 border-b-2 border-gray-200'>
+											<table className='w-full text-left'>
+												<thead>
+													<tr>
+														<th><p className='text-sm'>Imagen</p></th>
+														<th><p className='text-sm'>Producto</p></th>
+														<th><p className='text-sm'>Cantidad</p></th>
+														<th><p className='text-sm'>Precio</p></th>
+													</tr>
+												</thead>
+												<tbody>
+													{productosCart && productosCart.map(item => (
+														<tr key={item.id}>
+															<td>
+																<img
+																	className='size-10 rounded-lg object-cover'
+																	src={item.productos.img_url}
+																	alt="IMG"
+																/>
+															</td>
+															<td>
+																<p className='text-sm'>{item.productos.nombre}</p>
+															</td>
+															<td>
+																<p className='text-sm'>{item.cantidad}</p>
+															</td>
+															<td>
+																<p className='text-sm'>${item.productos.precio}</p>
+															</td>
+															<td>
+																<button
+																	className='text-sm text-red-500'
+																	onClick={() => handleDeleteProductCart(item.id)}>
+																	<IconTrash stroke={2} />
+																</button>
+															</td>
+														</tr>
+													))}
+													<tr className='border-t-2'>
+														<td colSpan='3'>
+															<p className='text-sm font-bold text-right px-2'>
+																Total:
+															</p>
+														</td>
+														<td>
+															<p className='text-sm'>${totalCart}</p>
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+
+									<div className="flex justify-center items-center space-x-4">
+										<button onClick={closeModal} type="button"
+											className="py-2 px-3 text-sm font-medium text-white bg-danger rounded-lg border border-gray-200 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 hover:text-gray-900 focus:z-10" data-modal-toggle="deleteModal">
+											Cancelar
+										</button>
+										<button data-modal-toggle="deleteModal" type="button"
+											className="py-2 px-3 text-sm font-medium text-white bg-primary rounded-lg border border-gray-200 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 hover:text-gray-900 focus:z-10">
+											Ir a pagar
+										</button>
+
+									</div>
 								</div>
-
-                                <div className="flex justify-center items-center space-x-4">
-                                    <button onClick={closeModal} data-modal-toggle="deleteModal" type="button" className="py-2 px-3 text-sm font-medium text-gray-500 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 hover:text-gray-900 focus:z-10">
-                                        cancelar
-                                    </button>
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                )}
+							</div>
+						</div>
+					)}
 
 
 				</header>
@@ -417,15 +551,15 @@ const LandingPage = () => {
 								</p>
 								<div className="flex justify-center py-8">
 									<div className="w-full max-w-4xl">
-										<iframe 
-										src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1856.0481837457608!2d-104.90924776118366!3d21.503944990575125!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x842736f1bbc629c5%3A0xf8dafe44d09a6c83!2sIndependencia%2C%2063136%20Tepic%2C%20Nay.!5e0!3m2!1ses!2smx!4v1716756965468!5m2!1ses!2smx" 
-										width="600" 
-										height="450" 
-										style={{ border: 0 }} 
-										allowFullScreen="" 
-										loading="lazy" 
-										referrerPolicy="no-referrer-when-downgrade"
-										className="w-full h-96"
+										<iframe
+											src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1856.0481837457608!2d-104.90924776118366!3d21.503944990575125!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x842736f1bbc629c5%3A0xf8dafe44d09a6c83!2sIndependencia%2C%2063136%20Tepic%2C%20Nay.!5e0!3m2!1ses!2smx!4v1716756965468!5m2!1ses!2smx"
+											width="600"
+											height="450"
+											style={{ border: 0 }}
+											allowFullScreen=""
+											loading="lazy"
+											referrerPolicy="no-referrer-when-downgrade"
+											className="w-full h-96"
 										></iframe>
 									</div>
 								</div>
@@ -433,7 +567,7 @@ const LandingPage = () => {
 						</div>
 					</section>
 
-							
+
 
 					{/* Footer */}
 					<footer className="flex flex-col items-center justify-between px-4 py-12 mx-auto max-w-7xl md:flex-row">

@@ -32,6 +32,7 @@ const Login = () => {
 			})
 			if (error) {
 				console.error('Error al iniciar sesión:', error.message);
+				alert('Error al iniciar sesión: Verifica tus datos');
 			} else {
 				// navigate('/dashboard')
 				// Redirigir al usuario a la página anterior o a la ruta deseada
@@ -42,6 +43,7 @@ const Login = () => {
 
 		} catch (error) {
 			console.error('Error al iniciar sesión:', error.message);
+
 		}
 	}
 

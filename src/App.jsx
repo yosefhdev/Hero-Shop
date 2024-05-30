@@ -16,6 +16,7 @@ import ProductDetail from './pages/ProductDetail';
 import TipoUsuario from "./pages/TipoUsuario";
 import Loader from './components/Loader';
 import PayDetails from './pages/PayDetails';
+import UserProfile from './pages/UserProfile';
 
 function App() {
 
@@ -78,6 +79,16 @@ function App() {
 							</ProtectedRoute>
 						}
 					/>
+
+					<Route
+						path="/profile"
+						element={
+							<ProtectedRoute isAuthenticated={isAuthenticated} isAdmin={true}>
+								<UserProfile />
+							</ProtectedRoute>
+						}
+					/>
+
 					<Route path="/access-denied" element={<AccessDeniedPage />} />
 					<Route path="*" element={<NotFoundPage />} />
 				</Routes>
