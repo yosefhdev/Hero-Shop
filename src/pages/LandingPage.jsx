@@ -371,10 +371,12 @@ const LandingPage = () => {
 											className="py-2 px-3 text-sm font-medium text-white bg-danger rounded-lg border border-gray-200 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 hover:text-gray-900 focus:z-10" data-modal-toggle="deleteModal">
 											Cancelar
 										</button>
-										<button data-modal-toggle="deleteModal" type="button"
-											className="py-2 px-3 text-sm font-medium text-white bg-primary rounded-lg border border-gray-200 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 hover:text-gray-900 focus:z-10">
-											Ir a pagar
-										</button>
+										<Link to='/buy'>
+											<button data-modal-toggle="deleteModal" type="button"
+												className="py-2 px-3 text-sm font-medium text-white bg-primary rounded-lg border border-gray-200 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 hover:text-gray-900 focus:z-10">
+												Ir a pagar
+											</button>
+										</Link>
 
 									</div>
 								</div>

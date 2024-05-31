@@ -89,6 +89,15 @@ function App() {
 						}
 					/>
 
+					<Route
+						path="/buy"
+						element={
+							<ProtectedRoute isAuthenticated={isAuthenticated} isAdmin={true}>
+								<PayDetails />
+							</ProtectedRoute>
+						}
+					/>
+
 					<Route path="/access-denied" element={<AccessDeniedPage />} />
 					<Route path="*" element={<NotFoundPage />} />
 				</Routes>
