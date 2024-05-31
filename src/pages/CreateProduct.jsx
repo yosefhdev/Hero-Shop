@@ -2,6 +2,9 @@ import supabase from "../supabase/client"
 import { useEffect, useState } from 'react'
 import { useNavigate } from "react-router-dom"
 import Loader from "../components/Loader"
+import { IconCirclePlus } from '@tabler/icons-react';
+import { IconX } from "@tabler/icons-react";
+import { Link } from "react-router-dom";
 
 // eslint-disable-next-line react/prop-types
 const CreateProduct = () => {
@@ -155,43 +158,47 @@ const CreateProduct = () => {
 
     return (
         <>
-            <section className="m-5">
-                <div className="">
-                    <h2 className="">Agregar productos nuevos.</h2>
-                    <form action="#" onSubmit={handleSubmit}>
-                        <div className="flex flex-col gap-5">
+		<div className="bg-cover bg-center" style={{ backgroundImage: 'url("/src/assets/logos/efecto.png")' }}>
+        <div className="flex justify-center items-center h-screen">
+                  <div className="max-w-screen-xl mx-4"> 
+                  <section className="w-full max-w-4xl p-8 bg-white rounded-lg shadow-lg">
+                  <div className="flex items-center mb-5 mt-3">
+                  <img src="/src/assets/logos/Hero-Shop-logo.webp" alt="Logo de la empresa" className="w-12 h-12 rounded-full mr-4" />
+                  <h2 className="text-3xl font-bold">Crear producto nuevo</h2>
+                  </div>
+                    <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
                             <div className="w-full">
-                                <h1 className="">Subir Imagen</h1>
+                                <h1 className="text-lg font-semibold">Subir Imagen</h1>
                                 <input
                                     type="file"
-                                    accept=".png, .jpg, .jpeg"
+                                    accept=".png, .jpg, .jpeg .webp"
                                     name="file"
                                     id="file"
-                                    className="border-2 border-black"
+                                    className="border border-gray-300 rounded-md px-4 py-2 w-full"
                                     onChange={(e) => setImage(e.target.files[0])}
                                 />
                             </div>
-                            <div className="">
-                                <label htmlFor="name" className="">Nombre del producto</label>
-                                <input type="text" name="name" id="name" className="border-2 border-black"
+                            <div className="w-full">
+                                <label htmlFor="name" className="text-lg font-semibold">Nombre del producto</label>
+                                <input type="text" name="name" id="name" className="border border-gray-300 rounded-md px-4 py-2 w-full"
                                     placeholder="Escribe el nombre del producto" required=""
                                     value={nombre} onChange={(e) => setNombre(e.target.value)} />
                             </div>
-                            <div className="">
-                                <label htmlFor="tipo" className="">Variaciones</label>
-                                <input type="text" name="tipo" id="tipo" className="border-2 border-black"
+                            <div className="w-full">
+                                <label htmlFor="tipo" className="text-lg font-semibold">Variaciones</label>
+                                <input type="text" name="tipo" id="tipo" className="border border-gray-300 rounded-md px-4 py-2 w-full"
                                     placeholder="Tallas, colores, etc." required=""
                                     value={tipo} onChange={(e) => setTipo(e.target.value)} />
                             </div>
                             <div className="">
-                                <label htmlFor="price" className="=">Precio</label>
-                                <input type="number" name="price" id="price" className="border-2 border-black"
+                                <label htmlFor="price" className="text-lg font-semibold">Precio</label>
+                                <input type="number" name="price" id="price" className="border border-gray-300 rounded-md px-4 py-2 w-full"
                                     placeholder="$100" required=""
                                     value={precio} onChange={(e) => setPrecio(e.target.value)} />
                             </div>
                             <div>
-                                <label htmlFor="category" className="">Categoria</label>
-                                <select id="category" className="border-2 border-black"
+                                <label htmlFor="category" className="text-lg font-semibold">Categoria</label>
+                                <select id="category" className="border border-gray-300 rounded-md px-4 py-2 w-full"
                                     value={categoria_p} onChange={(e) => setCategoria_p(e.target.value)} >
                                     {fetchError && <option value="">{fetchError}</option>}
                                     {categorias && categorias.map(categoria => (
@@ -204,25 +211,36 @@ const CreateProduct = () => {
                                 </select>
                             </div>
                             <div>
-                                <label htmlFor="item-weight" className="">Existencias</label>
-                                <input type="number" name="item-weight" id="item-weight" className="border-2 border-black"
+                                <label htmlFor="item-weight" className="text-lg font-semibold">Existencias</label>
+                                <input type="number" name="item-weight" id="item-weight" className="border border-gray-300 rounded-md px-4 py-2 w-full"
                                     placeholder="12" required=""
                                     value={existencia} onChange={(e) => setExistencia(e.target.value)} />
                             </div>
                             <div className="sm:col-span-2">
-                                <label htmlFor="description" className="">Descripcion</label>
-                                <textarea id="description" rows="8" className="border-2 border-black"
-                                    placeholder="Your description here"
+                                <label htmlFor="description" className="text-lg font-semibold">Descripcion</label>
+                                <textarea id="description" rows="3" className="border border-gray-300 rounded-md px-4 py-2 w-full"
+                                    placeholder="Escribe aqui tu descripción"
                                     value={descripcion} onChange={(e) => setDescripcion(e.target.value)}></textarea>
                             </div>
-                        </div>
-                        <button type="submit" className="" >
+                        <div className="flex justify-between">
+                        <button type="submit" className="flex items-center px-4 py-2 border-2 border-black rounded bg-blue-500 text-white hover:bg-red-600 transition-colors duration-200" >
+                            <IconCirclePlus stroke={2} className="mr-1" />
                             Agregar
                         </button>
+                         <Link to="/dashboard">
+									<button type="button" className="flex items-center px-4 py-2 border-2 border-black rounded bg-red-500 text-white hover:bg-red-600 transition-colors duration-200">
+										<IconX stroke={2} className="mr-1" />
+										Cancelar
+									</button>
+								</Link>
+                        </div>
                         {formError && <p className="">{formError}</p>}
                     </form>
+                    
+                    </section>
                 </div>
-            </section >
+                </div>
+            </div>
         </>
     )
 }
