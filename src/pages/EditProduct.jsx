@@ -196,14 +196,14 @@ const EditProduct = () => {
 					<section className="w-full max-w-4xl p-8 bg-white rounded-lg shadow-lg">
 						<div className="flex items-center mb-5 mt-3">
 							<img src="/src/assets/logos/Hero-Shop-logo.webp" alt="Logo de la empresa" className="w-12 h-12 rounded-full mr-4" />
-							<h2 className="text-3xl font-bold">Agregar productos nuevos</h2>
+							<h2 className="text-3xl font-bold">Actualizar producto</h2>
 						</div>
 						<form onSubmit={handleSubmit} className="flex flex-col gap-5">
 							<div className="w-full">
 								<h1 className="text-lg font-semibold">Subir Imagen</h1>
 								<input
 									type="file"
-									accept=".png, .jpg, .jpeg"
+									accept=".png, .jpg, .jpeg .webp"
 									name="file"
 									id="file"
 									className="border border-gray-300 rounded-md px-4 py-2 w-full"
