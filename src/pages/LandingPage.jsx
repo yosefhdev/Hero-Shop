@@ -412,6 +412,9 @@ const LandingPage = () => {
 						<li><a href="#" className="text-white block py-4 px-6 text-lg">Garantia</a></li>
 						<li><a href="#" className="text-white block py-4 px-6 text-lg">Contactenos</a></li>
 						<button onClick={openModal} className="text-white block py-4 px-6 text-lg">Carrito </button>
+						{isAuthenticated && userData?.rol === 1 && (
+                        <li><Link to="/dashboard" className="text-white block py-4 px-6 text-lg">Dashboard</Link></li>
+                          )}
 					</ul>
 				</nav>
 
