@@ -140,7 +140,7 @@ const Dashboard = () => {
 			setProductos(null)
 		}
 
-		if (data && data.length > 0) {
+		if (data) {
 			setProductos(data)
 			setFetchError(null)
 		}
@@ -165,7 +165,7 @@ const Dashboard = () => {
 			setProductos(null);
 		}
 
-		if (data && data.length > 0) {
+		if (data) {
 			setProductos(data);
 			setFetchError(null);
 		}

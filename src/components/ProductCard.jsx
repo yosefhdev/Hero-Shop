@@ -54,6 +54,7 @@ const ProductCard = ({ id, tipo, imagen, nombre, precio, descripccion, onDelete 
     };
 
     return (
+        
         <>
             <div className="relative bg-[color:var(--primary-color)] cursor-pointer shadow-[0_0_2px_rgba(0,0,0,0.1)] px-12 py-8 rounded-lg group" onClick={handleClickOutside} >
                 {/* Imagen del producto */}
@@ -107,9 +108,9 @@ const ProductCard = ({ id, tipo, imagen, nombre, precio, descripccion, onDelete 
                         <span className="border-[color:var(--background-color)] cursor-pointer transition-all duration-[0.4s] ease-[ease] flex items-center justify-center mr-[15%] p-4 rounded-[50%] border-2 border-solid hover:bg-[color:var(--background-color)]" onMouseEnter={() => setHovered(true)}
                             onMouseLeave={() => setHovered(false)}>
                             <Link to={'/edit-product/' + id}>
-                            <IconEdit      className="transition-colors duration-300"
- style={{ color: hovered ? 'var(--Blue-label-de-jonny-walker)' : 'var(--background-color)' }} stroke={2} size={'2rem'}> 
-                            </IconEdit>
+                                <IconEdit className="transition-colors duration-300"
+                                    style={{ color: hovered ? 'var(--Blue-label-de-jonny-walker)' : 'var(--background-color)' }} stroke={2} size={'2rem'}>
+                                </IconEdit>
                             </Link>
                         </span>
 

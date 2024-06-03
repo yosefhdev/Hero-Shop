@@ -35,7 +35,7 @@ const PayDetails = () => {
 					return;
 				}
 
-				if (userData && userData.length > 0) {
+				if (userData) {
 					setUserData(userData[0]);
 					const hasDireccion = Boolean(
 						userData[0].telefono &&

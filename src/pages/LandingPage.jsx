@@ -49,7 +49,7 @@ const LandingPage = () => {
 					return;
 				}
 
-				if (userData && userData.length > 0) {
+				if (userData) {
 					setUserData(userData[0]);
 					const { data: cartData, error: cartError } = await supabase
 						.from('carrito')
@@ -129,7 +129,7 @@ const LandingPage = () => {
 			setProductos(null)
 		}
 
-		if (data && data.length > 0) {
+		if (data) {
 			setProductos(data)
 			setFetchError(null)
 		}
@@ -476,6 +476,7 @@ const LandingPage = () => {
 									tipo={producto.tipo}
 									nombre={producto.nombre}
 									precio={producto.precio}
+									imagen={producto.img_url}
 								/>
 							))}
 						</div>
@@ -514,6 +515,7 @@ const LandingPage = () => {
 									tipo={producto.tipo}
 									nombre={producto.nombre}
 									precio={producto.precio}
+									imagen={producto.img_url}
 								/>
 							))}
 						</div>

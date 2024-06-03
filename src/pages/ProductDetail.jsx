@@ -44,7 +44,7 @@ const ProductDetail = () => {
 					return;
 				}
 
-				if (userData && userData.length > 0) {
+				if (userData) {
 					setUserData(userData[0]);
 					const { data: cartData, error: cartError } = await supabase
 						.from('carrito')
