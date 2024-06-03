@@ -85,23 +85,23 @@ const Dashboard = () => {
 			}
 		}
 
-		    // Verificar si la categoría ya existe
-			const { data: existingCategory, error: fetchError } = await supabase
+		// Verificar si la categoría ya existe
+		const { data: existingCategory, error: fetchError } = await supabase
 			.from('categoria_productos')
 			.select('id')
 			.ilike('categoria', categoriaNormalized)
 			.single();
-	  
-		  if (fetchError && fetchError.code !== 'PGRST116') { // PGRST116 es un error de single() cuando no se encuentra
+
+		if (fetchError && fetchError.code !== 'PGRST116') { // PGRST116 es un error de single() cuando no se encuentra
 			console.log('Error al verificar la categoría:', fetchError.message);
 			setFormError('Error al verificar la categoría.');
 			return;
-		  }
-	  
-		  if (existingCategory) {
+		}
+
+		if (existingCategory) {
 			setFormError('La categoría ya existe.');
 			return;
-		  }
+		}
 		//Insertar categorias
 		const { data, error } = await supabase
 			.from('categoria_productos')
@@ -193,7 +193,7 @@ const Dashboard = () => {
 		let imageUrl = '';
 
 		// Subir la nueva imagen si se seleccionó una
-		if (imageU ) {
+		if (imageU) {
 			const timestamp = new Date().getTime();
 			const extension = imageU.name.split('.').pop();
 			const uniqueName = `${timestamp}_${imageU.name.replace(`.${extension}`, '')}`;
@@ -209,76 +209,76 @@ const Dashboard = () => {
 			} else {
 				imageUrl = `https://qcuiowxnmiamysnjtwto.supabase.co/storage/v1/object/public/${uploadData.fullPath}`;
 			}
-		
 
 
-		try {
 
-			
-			// Actualizar la categoría en Supabase
-			const { data: updatedData, error: updateError } = await supabase
-				.from('categoria_productos')
-				.update({ categoria: categoriaU, img_url: imageUrl })
-				.eq('id', selectedIdU);
+			try {
 
-			fetchCategories()
-			if (updateError) {
+
+				// Actualizar la categoría en Supabase
+				const { data: updatedData, error: updateError } = await supabase
+					.from('categoria_productos')
+					.update({ categoria: categoriaU, img_url: imageUrl })
+					.eq('id', selectedIdU);
+
+				fetchCategories()
+				if (updateError) {
+					setFormErrorU('Error al actualizar la categoría');
+					console.error('Error al actualizar la categoría:', updateError);
+					return;
+				}
+
+				// Resetear el formulario después de la actualización
+				setSelectedIdU(null);
+				setCategoriaU('');
+				setImageU(null);
+				setImageNameU('');
+				setFormErrorU('');
+
+				// Realizar alguna acción adicional con los datos actualizados
+				console.log('Categoría actualizada con éxito:', updatedData);
+			} catch (error) {
+				console.error('Error al actualizar la categoría:', error);
 				setFormErrorU('Error al actualizar la categoría');
-				console.error('Error al actualizar la categoría:', updateError);
-				return;
 			}
 
-			// Resetear el formulario después de la actualización
-			setSelectedIdU(null);
-			setCategoriaU('');
-			setImageU(null);
-			setImageNameU('');
-			setFormErrorU('');
-
-			// Realizar alguna acción adicional con los datos actualizados
-			console.log('Categoría actualizada con éxito:', updatedData);
-		} catch (error) {
-			console.error('Error al actualizar la categoría:', error);
-			setFormErrorU('Error al actualizar la categoría');
-		}
-         
 
 
 
-	    } else {
+		} else {
 
 
 
 			// Si no se seleccionó una nueva imagen solo se actualizara el nombre
-			try{
+			try {
 
-			// Actualizar la categoría en Supabase
-			const { data: updatedData, error: updateError } = await supabase
-				.from('categoria_productos')
-				.update({ categoria: categoriaU})
-				.eq('id', selectedIdU);
+				// Actualizar la categoría en Supabase
+				const { data: updatedData, error: updateError } = await supabase
+					.from('categoria_productos')
+					.update({ categoria: categoriaU })
+					.eq('id', selectedIdU);
 
-			fetchCategories()
-			if (updateError) {
+				fetchCategories()
+				if (updateError) {
+					setFormErrorU('Error al actualizar la categoría');
+					console.error('Error al actualizar la categoría:', updateError);
+					return;
+				}
+
+				// Resetear el formulario después de la actualización
+				setSelectedIdU(null);
+				setCategoriaU('');
+				setImageU(null);
+				setImageNameU('');
+				setFormErrorU('');
+
+				// Realizar alguna acción adicional con los datos actualizados
+				console.log('Categoría actualizada con éxito:', updatedData);
+			} catch (error) {
+				console.error('Error al actualizar la categoría:', error);
 				setFormErrorU('Error al actualizar la categoría');
-				console.error('Error al actualizar la categoría:', updateError);
-				return;
 			}
 
-			// Resetear el formulario después de la actualización
-			setSelectedIdU(null);
-			setCategoriaU('');
-			setImageU(null);
-			setImageNameU('');
-			setFormErrorU('');
-
-			// Realizar alguna acción adicional con los datos actualizados
-			console.log('Categoría actualizada con éxito:', updatedData);
-		} catch (error) {
-			console.error('Error al actualizar la categoría:', error);
-			setFormErrorU('Error al actualizar la categoría');
-		}
-			
 		}
 	};
 
@@ -303,7 +303,7 @@ const Dashboard = () => {
 
 	const handleMouseEnter = (index) => {
 		const { clientX, clientY } = event;
-		setPopoverPosition({ x: clientX - 150 , y: clientY });
+		setPopoverPosition({ x: clientX - 150, y: clientY });
 		setShowPopover(index);
 	};
 
