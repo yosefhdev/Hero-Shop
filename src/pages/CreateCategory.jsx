@@ -168,6 +168,7 @@ const Dashboard = () => {
 
 	//Actualizar categoria
 	const [categoriaU, setCategoriaU] = useState('');
+	// eslint-disable-next-line no-unused-vars
 	const [imageNameU, setImageNameU] = useState('');
 	const [selectedIdU, setSelectedIdU] = useState(0);
 	const [formErrorU, setFormErrorU] = useState('');
@@ -190,6 +191,16 @@ const Dashboard = () => {
 			return;
 		}
 
+		console.log('categoriaU:', categoriaU);
+		console.log('categoriaImp:', categoriaImp);
+
+		for (let i = 0; i < categoriaImp.length; i++) {
+			if (categoriaImp[i].categoria.toLowerCase() === categoriaU.toLowerCase() && categoriaImp[i].id !== selectedIdU) {
+				setFormErrorU('La categoría ya existe');
+				return;
+			}
+		}
+
 		let imageUrl = '';
 
 		// Subir la nueva imagen si se seleccionó una
@@ -209,77 +220,47 @@ const Dashboard = () => {
 			} else {
 				imageUrl = `https://qcuiowxnmiamysnjtwto.supabase.co/storage/v1/object/public/${uploadData.fullPath}`;
 			}
-
-
-
-			try {
-
-
-				// Actualizar la categoría en Supabase
-				const { data: updatedData, error: updateError } = await supabase
-					.from('categoria_productos')
-					.update({ categoria: categoriaU, img_url: imageUrl })
-					.eq('id', selectedIdU);
-
-				fetchCategories()
-				if (updateError) {
-					setFormErrorU('Error al actualizar la categoría');
-					console.error('Error al actualizar la categoría:', updateError);
-					return;
-				}
-
-				// Resetear el formulario después de la actualización
-				setSelectedIdU(null);
-				setCategoriaU('');
-				setImageU(null);
-				setImageNameU('');
-				setFormErrorU('');
-
-				// Realizar alguna acción adicional con los datos actualizados
-				console.log('Categoría actualizada con éxito:', updatedData);
-			} catch (error) {
-				console.error('Error al actualizar la categoría:', error);
-				setFormErrorU('Error al actualizar la categoría');
-			}
-
-
-
-
-		} else {
-
-
-
-			// Si no se seleccionó una nueva imagen solo se actualizara el nombre
-			try {
-
-				// Actualizar la categoría en Supabase
-				const { data: updatedData, error: updateError } = await supabase
-					.from('categoria_productos')
-					.update({ categoria: categoriaU })
-					.eq('id', selectedIdU);
-
-				fetchCategories()
-				if (updateError) {
-					setFormErrorU('Error al actualizar la categoría');
-					console.error('Error al actualizar la categoría:', updateError);
-					return;
-				}
-
-				// Resetear el formulario después de la actualización
-				setSelectedIdU(null);
-				setCategoriaU('');
-				setImageU(null);
-				setImageNameU('');
-				setFormErrorU('');
-
-				// Realizar alguna acción adicional con los datos actualizados
-				console.log('Categoría actualizada con éxito:', updatedData);
-			} catch (error) {
-				console.error('Error al actualizar la categoría:', error);
-				setFormErrorU('Error al actualizar la categoría');
-			}
-
 		}
+
+		try {
+
+			// Crear el objeto de actualización
+			let updateData = {
+				categoria: categoriaU
+			};
+
+			// Solo incluir img_url si imageUrl no está vacío
+			if (imageUrl !== '') {
+				updateData.img_url = imageUrl;
+			}
+
+			// Actualizar la categoría en Supabase
+			const { data: updatedData, error: updateError } = await supabase
+				.from('categoria_productos')
+				.update(updateData)
+				.eq('id', selectedIdU);
+
+			fetchCategories()
+			if (updateError) {
+				setFormErrorU('Error al actualizar la categoría');
+				console.error('Error al actualizar la categoría:', updateError);
+				return;
+			}
+
+			// Resetear el formulario después de la actualización
+			setSelectedIdU(null);
+			setCategoriaU('');
+			setImageU(null);
+			setImageNameU('');
+			setFormErrorU('');
+
+			// Realizar alguna acción adicional con los datos actualizados
+			console.log('Categoría actualizada con éxito:', updatedData);
+		} catch (error) {
+			console.error('Error al actualizar la categoría:', error);
+			setFormErrorU('Error al actualizar la categoría');
+		}
+
 	};
 
 	const [search, setSearch] = useState('')

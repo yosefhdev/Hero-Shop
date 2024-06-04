@@ -123,10 +123,7 @@ const UserProfile = () => {
 					console.error('Error al subir la imagen:', error);
 					return
 				} else {
-					// console.log('data', data.fullPath);
-					//            https://qcuiowxnmiamysnjtwto.supabase.co/storage/v1/object/public/imagenes_user/1717394004618_Yo
 					imagen_url = `https://qcuiowxnmiamysnjtwto.supabase.co/storage/v1/object/public/${data.fullPath}`;
-					// console.log('imagen_url', imagen_url);
 				}
 			}
 
