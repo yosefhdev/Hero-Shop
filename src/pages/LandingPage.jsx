@@ -15,6 +15,7 @@ import { IconSearch } from '@tabler/icons-react';
 import { IconTags } from '@tabler/icons-react';
 import { IconShoppingCart } from '@tabler/icons-react';
 import { IconLogout } from '@tabler/icons-react';
+import { IconUserCircle } from '@tabler/icons-react';
 import { IconLogin } from '@tabler/icons-react';
 import { IconTrash } from '@tabler/icons-react';
 
@@ -28,6 +29,8 @@ const LandingPage = () => {
 
 	const [fetchCartError, setFetchCartError] = useState(null)
 	const [productosCart, setProductosCart] = useState(null)
+
+	const [isMenuOpen, setIsMenuOpen] = useState(false);
 
 	useEffect(() => {
 		const fetchUserData = async () => {
@@ -241,8 +244,9 @@ const LandingPage = () => {
 		setShowModal(false);
 	};
 
-	// console.log('isAuthenticated', isAuthenticated)
-	// console.log('userData', userData)
+	const toggleMenu = () => {
+		setIsMenuOpen(!isMenuOpen);
+	};
 
 	return (
 
@@ -279,15 +283,22 @@ const LandingPage = () => {
 					<div className='flex items-center'>
 						{isAuthenticated && userData ? (
 							<>
-								<div className='flex gap-x-5'>
-									<p className='text-white'>
-										Bienvenido, {userData.nombre}
+								<div className='flex gap-x-5 items-center'>
+									<p className='text-white font-semibold hover:underline hover:underline-offset-4'>
+										<Link to='/profile'>Bienvenido, {userData.nombre}.</Link>
 									</p>
+
+									{userData.img_user !== ''
+										? <img
+											onClick={toggleMenu}
+											src={userData.img_user}
+											alt="user"
+											className="rounded-full size-12 cursor-pointer hover:opacity-80 hover:shadow-2xl transition-all duration-300 ease-in-out"
+										/>
+										: <IconUserCircle stroke={1.5} size={65} style={{ color: 'var(--primary-color)', margin: '-.9rem -.1rem', paddingRight: '2rem', paddingLeft: '.7rem' }} />
+									}
 									<button onClick={openModal}>
 										<IconShoppingCart stroke={2} className='text-white' />
-									</button>
-									<button onClick={handleLogOut}>
-										<IconLogout stroke={2} className='text-white' />
 									</button>
 								</div>
 							</>
@@ -299,6 +310,20 @@ const LandingPage = () => {
 
 					</div>
 
+					{isMenuOpen === true && (
+						<div className="absolute border-2 top-20 right-5 mt-2 w-48 z-50 bg-white shadow-lg rounded-md font-semibold">
+							<button to="/profile" onClick={() => navigate('/profile')} className="block w-full px-4 py-2 text-gray-800 hover:text-primary hover:bg-blue-100">
+								<div className='flex gap-5 items-center mr-auto'>
+									<IconUserCircle />Perfil
+								</div>
+							</button>
+							<button onClick={handleLogOut} className="block w-full px-4 py-2 text-gray-800 hover:text-red-500 hover:bg-red-100">
+								<div className='flex gap-5 items-center'>
+									<IconLogout /> Cerrar sesión
+								</div>
+							</button>
+						</div>
+					)}
 
 					{showModal && (
 						<div id="deleteModal" tabIndex="-1" aria-hidden="true"
@@ -413,8 +438,8 @@ const LandingPage = () => {
 						<li><a href="#" className="text-white block py-4 px-6 text-lg">Contactenos</a></li>
 						<button onClick={openModal} className="text-white block py-4 px-6 text-lg">Carrito </button>
 						{isAuthenticated && userData?.rol === 1 && (
-                        <li><Link to="/dashboard" className="text-white block py-4 px-6 text-lg">Dashboard</Link></li>
-                          )}
+							<li><Link to="/dashboard" className="text-white block py-4 px-6 text-lg">Dashboard</Link></li>
+						)}
 					</ul>
 				</nav>
 

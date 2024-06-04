@@ -17,6 +17,7 @@ import { IconBrandMeta } from '@tabler/icons-react';
 import { IconBrandXdeep } from '@tabler/icons-react';
 import { IconBrandInstagram } from '@tabler/icons-react';
 import { IconLetterJSmall } from '@tabler/icons-react';
+import { IconLogout } from '@tabler/icons-react';
 // import { IconLogout } from '@tabler/icons-react';
 
 // eslint-disable-next-line react/prop-types
@@ -25,12 +26,13 @@ const Dashboard = () => {
 
 	const { isAuthenticated } = useAuth();
 	const [userData, setUserData] = useState(null);
+	const [isMenuOpen, setIsMenuOpen] = useState(false);
 
 	useEffect(() => {
 		const fetchUserData = async () => {
 			const { data: { user } } = await supabase.auth.getUser();
 			if (user) {
-				console.log('user.id', user.id)
+				// console.log('user.id', user.id)
 				let { data, error } = await supabase
 					.from('usuarios')
 					.select("*")
@@ -176,6 +178,10 @@ const Dashboard = () => {
 		return <Loader />
 	}
 
+	const toggleMenu = () => {
+		setIsMenuOpen(!isMenuOpen);
+	};
+
 	return (
 		<>
 			<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
@@ -209,17 +215,38 @@ const Dashboard = () => {
 									<img src={logo} className="rounded-full mr-3 h-6 sm:h-9" alt="Flowbite Logo" /></Link>
 								<h1 className="no-underline text-[color:var(--red-color)] text-5xl uppercase tracking-[-1px] font-[Poppins] font-bold"><a href="/">Hero-shop Administrador</a></h1>
 							</div>
-							<div className="flex gap-4 cursor-pointer">
+							<div className="flex gap-4 text-right justify-center items-center">
 
 								{isAuthenticated && userData && (
-									<p className='mt-[2%] text-right'>
-										<a className='text-[#1C50CB] text-[15px]'>Bienvenido, {`${userData.nombre}`} </a>
-										<br />
-										<a className='text-[#e10c0c] text-[15px]' onClick={handleLogOut}>Cerrar sesion</a>
+									<p className='flex gap-5 text-right hover:underline hover:underline-offset-4 text-[#1C50CB] text-[15px]'>
+										<Link to='/profile'>Bienvenido, {userData.nombre}.</Link>
 									</p>
 								)}
-								<IconUserCircle stroke={1.5} size={65} style={{ color: 'var(--primary-color)', margin: '-.9rem -.1rem', paddingRight: '2rem', paddingLeft: '.7rem' }} />
-
+								<div >
+									{userData.img_user !== ''
+										? <img
+											onClick={toggleMenu}
+											src={userData.img_user}
+											alt="user"
+											className="rounded-full size-16 mr-5 my-2 cursor-pointer hover:opacity-80 hover:shadow-2xl transition-all duration-300 ease-in-out"
+										/>
+										: <IconUserCircle stroke={1.5} size={65} style={{ color: 'var(--primary-color)', margin: '-.9rem -.1rem', paddingRight: '2rem', paddingLeft: '.7rem' }} />
+									}
+								</div>
+								{isMenuOpen === true && (
+									<div className="absolute border-2 top-20 right-5 mt-2 w-64 z-50 bg-white shadow-lg rounded-md font-semibold">
+										<button to="/profile" onClick={() => navigate('/profile')} className="block w-full px-4 py-2 text-gray-800 hover:text-primary hover:bg-blue-100">
+											<div className='flex gap-5 items-center mr-auto'>
+												<IconUserCircle />Perfil
+											</div>
+										</button>
+										<button onClick={handleLogOut} className="block w-full px-4 py-2 text-gray-800 hover:text-red-500 hover:bg-red-100">
+											<div className='flex gap-5 items-center'>
+												<IconLogout /> Cerrar sesión
+											</div>
+										</button>
+									</div>
+								)}
 							</div>
 						</div>
 					</div>
