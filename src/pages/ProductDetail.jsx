@@ -187,17 +187,18 @@ const ProductDetail = () => {
 			return;
 		}
 	
+		console.log('Usuario:', user.id)
+		console.log('Producto:', product.id)
 		// Verificar si el producto ya existe en el carrito
 		const { data: existingProduct, error: fetchError } = await supabase
 			.from('carrito')
-			.select('id, cantidad')
+			.select('*')
 			.eq('usuario_id', user.id)
 			.eq('producto_id', product.id)
 			.single();
 	
 		if (fetchError) {
 			console.error('Error al verificar el producto en el carrito:', fetchError);
-			return;
 		}
 	
 		if (existingProduct) {
