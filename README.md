@@ -11,6 +11,8 @@ Este es un proyecto creado con Vite y React. Vite es una herramienta de construc
 - **Supabase**: Plataforma de backend como servicio que proporciona una base de datos PostgreSQL, autenticación, almacenamiento de archivos y más.
 - **Tailwind CSS**: Framework de estilos utilitario que permite construir diseños personalizados de manera rápida y eficiente.
 - **JavaScript moderno**: Utiliza las últimas características de JavaScript respaldadas por navegadores modernos.
+- **@tabler/icons-react**: Conjunto de iconos SVG listos para usar en tus componentes de React.
+
 
 ## Backend con Supabase
 <img src="https://github.com/yosefhdev/Hero-Shop/assets/167670949/145dcc55-9ab7-4ced-8b08-e865972dbb0d" width="500" style="margin-right: 10px;"><br>
