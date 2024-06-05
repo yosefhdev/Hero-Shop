@@ -431,7 +431,6 @@ const LandingPage = () => {
 															</td>
 															<td>
 																<p className='text-sm'>{item.productos.nombre}</p>
-																<p className='text-sm'>{item.id}</p>
 															</td>
 															<td>
 																{/* <p className='text-sm'>{item.cantidad}</p> */}
