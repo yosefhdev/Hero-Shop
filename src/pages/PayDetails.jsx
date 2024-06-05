@@ -109,7 +109,7 @@ const PayDetails = () => {
 					<div className="flex flex-col gap-y-4 w-1/2 pl-4">
 						<div>
 							<button
-								onClick={() => navigate('/dashboard')}
+								onClick={() => navigate('/')}
 								className={`bg-primary text-white text-sm font-bold py-2 px-4 rounded-lg cursor-pointer border-2 border-primary
 							hover:bg-blue-900 flex mb-5
 							active:bg-white active:text-primary active:border-2 active:border-primary`}>
