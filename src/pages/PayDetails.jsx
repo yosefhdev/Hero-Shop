@@ -19,7 +19,7 @@ const PayDetails = () => {
 	useEffect(() => {
 		const fetchUserData = async () => {
 			const { data: { user }, error: authError } = await supabase.auth.getUser();
-
+			setIsLoading(true);
 			if (authError) {
 				console.error('Error al obtener el usuario:', authError.message);
 				return;
@@ -80,6 +80,7 @@ const PayDetails = () => {
 				console.warn('Usuario no autenticado. Redirigiendo a la página de login.');
 				navigate('/login');
 			}
+			setIsLoading(false);
 		};
 
 		if (isAuthenticated) {
@@ -94,7 +95,7 @@ const PayDetails = () => {
 		})
 	}
 
-	const [isLoading, setIsLoading] = useState(false);
+	const [isLoading, setIsLoading] = useState(true);
 	if (isLoading) {
 		return <Loader />
 	}

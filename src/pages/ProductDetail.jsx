@@ -179,14 +179,14 @@ const ProductDetail = () => {
 	const AgregarCarrito = async () => {
 		// eslint-disable-next-line no-unused-vars
 		const { data: { user }, error: authError } = await supabase.auth.getUser();
-	
+
 		if (authError) {
 			console.error('Error al obtener el usuario:', authError);
 			alert('Inicie sesión para agregar productos al carrito');
 			navigate('/login');
 			return;
 		}
-	
+
 		console.log('Usuario:', user.id)
 		console.log('Producto:', product.id)
 		// Verificar si el producto ya existe en el carrito
@@ -196,11 +196,11 @@ const ProductDetail = () => {
 			.eq('usuario_id', user.id)
 			.eq('producto_id', product.id)
 			.single();
-	
+
 		if (fetchError) {
 			console.error('Error al verificar el producto en el carrito:', fetchError);
 		}
-	
+
 		if (existingProduct) {
 			// Si el producto ya existe, actualizar la cantidad
 			const { data: updateData, error: updateError } = await supabase
@@ -208,13 +208,13 @@ const ProductDetail = () => {
 				.update({ cantidad: existingProduct.cantidad + 1 })
 				.eq('id', existingProduct.id)
 				.select();
-	
+
 			if (updateError) {
 				console.error('Error al actualizar la cantidad del producto en el carrito:', updateError);
 				console.log('data', updateData);
 				return;
 			}
-	
+
 			console.log('Cantidad del producto actualizada en el carrito:', updateData);
 		} else {
 			// Si el producto no existe, insertarlo en el carrito
@@ -228,20 +228,20 @@ const ProductDetail = () => {
 					}
 				])
 				.select();
-	
+
 			if (insertError) {
 				console.error('Error al agregar al carrito:', insertError);
 				console.log('data', insertData);
 				return;
 			}
-	
+
 			console.log('Producto agregado al carrito:', insertData);
 		}
-	
+
 		setShowCartConfirmation(true);
 		// navigate('/')
 	}
-	
+
 	// Función para abrir el modal
 
 	const openModal = () => {
@@ -258,6 +258,52 @@ const ProductDetail = () => {
 		navigate('/')
 	}
 
+	const handleUpdateQuantity = async (itemId, newQuantity) => {
+		// Verificar que la nueva cantidad no sea menor que 1
+		if (newQuantity < 1) {
+			return;
+		}
+
+		// Actualizar la cantidad en la base de datos
+		const { data, error } = await supabase
+			.from('carrito')
+			.update({ cantidad: newQuantity })
+			.eq('producto_id', itemId)
+			.eq('usuario_id', userData.id)
+			.select();
+
+		if (error) {
+			console.error('Error al actualizar la cantidad del producto en el carrito:', error);
+			return;
+		}
+
+		console.log('Cantidad del producto actualizada en el carrito:', data);
+
+		// Actualizar el estado local para reflejar el cambio en la UI
+		const { data: cartData, error: cartError } = await supabase
+			.from('carrito')
+			.select(`
+							id,
+							producto_id,
+							cantidad,
+							productos (
+								id,
+								nombre,
+								precio,
+								img_url
+							)
+						`)
+			.eq('usuario_id', userData.id);
+
+		if (cartError) {
+			setFetchCartError("Error al cargar el carrito");
+			console.error('Error al cargar el carrito:', cartError.message);
+			setProductosCart(null);
+		} else {
+			setProductosCart(cartData);
+			setFetchCartError(null);
+		}
+	};
 
 	return (
 		<div className="bg-cover bg-center min-h-screen" style={{ backgroundImage: 'url("/src/assets/logos/efecto.png")' }}>
@@ -331,7 +377,19 @@ const ProductDetail = () => {
 															<p className='text-sm'>{item.productos.nombre}</p>
 														</td>
 														<td>
-															<p className='text-sm'>{item.cantidad}</p>
+															<div className='flex items-center'>
+																<button
+																	className='text-sm text-gray-500'
+																	onClick={() => handleUpdateQuantity(item.producto_id, item.cantidad - 1)}>
+																	-
+																</button>
+																<p className='text-sm mx-2'>{item.cantidad}</p>
+																<button
+																	className='text-sm text-gray-500'
+																	onClick={() => handleUpdateQuantity(item.producto_id, item.cantidad + 1)}>
+																	+
+																</button>
+															</div>
 														</td>
 														<td>
 															<p className='text-sm'>${item.productos.precio}</p>
@@ -365,10 +423,12 @@ const ProductDetail = () => {
 										className="py-2 px-3 text-sm font-medium text-white bg-danger rounded-lg border border-gray-200 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 hover:text-gray-900 focus:z-10" data-modal-toggle="deleteModal">
 										Cancelar
 									</button>
-									<button data-modal-toggle="deleteModal" type="button"
-										className="py-2 px-3 text-sm font-medium text-white bg-primary rounded-lg border border-gray-200 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 hover:text-gray-900 focus:z-10">
-										Ir a pagar
-									</button>
+									<Link to='/buy'>
+										<button data-modal-toggle="deleteModal" type="button"
+											className="py-2 px-3 text-sm font-medium text-white bg-primary rounded-lg border border-gray-200 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 hover:text-gray-900 focus:z-10">
+											Ir a pagar
+										</button>
+									</Link>
 
 								</div>
 							</div>
@@ -429,8 +489,8 @@ const ProductDetail = () => {
 							</div>
 							<div className="flex items-center gap-5 justify-center pt-0 space-y-4 sm:flex sm:space-y-0">
 								<div className="items-center space-y-4 sm:space-x-4 sm:flex sm:space-y-0">
-									<button onClick={toggleCartConfirmation} id="confirm-button" type="button" 
-									className="py-2 px-4 w-full text-sm font-medium text-center text-white rounded-lg bg-primary-700 sm:w-auto hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary dark:hover:bg-primary/75 dark:focus:ring-primary-800">
+									<button onClick={toggleCartConfirmation} id="confirm-button" type="button"
+										className="py-2 px-4 w-full text-sm font-medium text-center text-white rounded-lg bg-primary-700 sm:w-auto hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary dark:hover:bg-primary/75 dark:focus:ring-primary-800">
 										Confirm
 									</button>
 								</div>
