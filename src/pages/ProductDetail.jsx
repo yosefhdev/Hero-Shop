@@ -10,6 +10,7 @@ import { IconLogout } from '@tabler/icons-react';
 import { IconShoppingCart } from '@tabler/icons-react';
 import { IconLogin } from '@tabler/icons-react';
 import { IconTrash } from '@tabler/icons-react';
+import { IconRosetteDiscountCheck } from '@tabler/icons-react';
 
 const ProductDetail = () => {
 	const { productId } = useParams();
@@ -22,7 +23,7 @@ const ProductDetail = () => {
 
 	const [fetchCartError, setFetchCartError] = useState(null)
 	const [productosCart, setProductosCart] = useState(null)
-
+	const [showCartConfirmation, setShowCartConfirmation] = useState(false);
 
 	useEffect(() => {
 		const fetchUserData = async () => {
@@ -141,7 +142,8 @@ const ProductDetail = () => {
 		return <p className="text-center">Producto no encontrado</p>;
 	}
 
-	const AgregarCarrito = async () => {
+	// eslint-disable-next-line no-unused-vars
+	const AgregarCarritoOld = async () => {
 		// eslint-disable-next-line no-unused-vars
 		const { data: { user }, error: authError } = await supabase.auth.getUser();
 
@@ -169,10 +171,76 @@ const ProductDetail = () => {
 
 		if (data) {
 			console.log('Producto agregado al carrito:', data);
-			alert('Producto agregado al carrito');
-			navigate('/')
+			setShowCartConfirmation(true);
+			// navigate('/')
 		}
 	}
+
+	const AgregarCarrito = async () => {
+		// eslint-disable-next-line no-unused-vars
+		const { data: { user }, error: authError } = await supabase.auth.getUser();
+	
+		if (authError) {
+			console.error('Error al obtener el usuario:', authError);
+			alert('Inicie sesión para agregar productos al carrito');
+			navigate('/login');
+			return;
+		}
+	
+		// Verificar si el producto ya existe en el carrito
+		const { data: existingProduct, error: fetchError } = await supabase
+			.from('carrito')
+			.select('id, cantidad')
+			.eq('usuario_id', user.id)
+			.eq('producto_id', product.id)
+			.single();
+	
+		if (fetchError) {
+			console.error('Error al verificar el producto en el carrito:', fetchError);
+			return;
+		}
+	
+		if (existingProduct) {
+			// Si el producto ya existe, actualizar la cantidad
+			const { data: updateData, error: updateError } = await supabase
+				.from('carrito')
+				.update({ cantidad: existingProduct.cantidad + 1 })
+				.eq('id', existingProduct.id)
+				.select();
+	
+			if (updateError) {
+				console.error('Error al actualizar la cantidad del producto en el carrito:', updateError);
+				console.log('data', updateData);
+				return;
+			}
+	
+			console.log('Cantidad del producto actualizada en el carrito:', updateData);
+		} else {
+			// Si el producto no existe, insertarlo en el carrito
+			const { data: insertData, error: insertError } = await supabase
+				.from('carrito')
+				.insert([
+					{
+						usuario_id: user.id,
+						producto_id: product.id,
+						cantidad: 1
+					}
+				])
+				.select();
+	
+			if (insertError) {
+				console.error('Error al agregar al carrito:', insertError);
+				console.log('data', insertData);
+				return;
+			}
+	
+			console.log('Producto agregado al carrito:', insertData);
+		}
+	
+		setShowCartConfirmation(true);
+		// navigate('/')
+	}
+	
 	// Función para abrir el modal
 
 	const openModal = () => {
@@ -183,6 +251,12 @@ const ProductDetail = () => {
 	const closeModal = () => {
 		setShowModal(false);
 	};
+
+	const toggleCartConfirmation = () => {
+		setShowCartConfirmation(!showCartConfirmation);
+		navigate('/')
+	}
+
 
 	return (
 		<div className="bg-cover bg-center min-h-screen" style={{ backgroundImage: 'url("/src/assets/logos/efecto.png")' }}>
@@ -343,6 +417,27 @@ const ProductDetail = () => {
 					</section>
 				</div>
 			</div>
+
+			{showCartConfirmation && (
+				<div id="info-popup" tabIndex="-1" className="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-full">
+					<div className="relative p-4 w-full max-w-lg h-full md:h-auto">
+						<div className="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 md:p-8">
+							<div className="flex items-center gap-5 justify-center mb-4 text-sm font-light text-gray-500 dark:text-gray-400">
+								<IconRosetteDiscountCheck stroke={2} className='text-green-500 ' />
+								<h3 className="text-2xl font-bold text-gray-900 dark:text-white">Producto Agregado al carrito</h3>
+							</div>
+							<div className="flex items-center gap-5 justify-center pt-0 space-y-4 sm:flex sm:space-y-0">
+								<div className="items-center space-y-4 sm:space-x-4 sm:flex sm:space-y-0">
+									<button onClick={toggleCartConfirmation} id="confirm-button" type="button" 
+									className="py-2 px-4 w-full text-sm font-medium text-center text-white rounded-lg bg-primary-700 sm:w-auto hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary dark:hover:bg-primary/75 dark:focus:ring-primary-800">
+										Confirm
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			)}
 		</div>
 	);
 }

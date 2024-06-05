@@ -4,6 +4,7 @@ import { useAuth } from './auth';
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import Loader from '../components/Loader';
+import { IconHome } from '@tabler/icons-react';
 
 const PayDetails = () => {
 
@@ -41,7 +42,7 @@ const PayDetails = () => {
 						userData[0].telefono &&
 						userData[0].calle &&
 						userData[0].num_ext &&
-						userData[0].num_int &&
+						// userData[0].num_int &&
 						userData[0].colonia &&
 						userData[0].ciudad &&
 						userData[0].codigo_postal &&
@@ -86,6 +87,13 @@ const PayDetails = () => {
 		}
 	}, [isAuthenticated, navigate]);
 
+	let totalCart = 0;
+	if (productosCart) {
+		productosCart.forEach(item => {
+			totalCart += item.productos.precio * item.cantidad
+		})
+	}
+
 	const [isLoading, setIsLoading] = useState(false);
 	if (isLoading) {
 		return <Loader />
@@ -99,6 +107,15 @@ const PayDetails = () => {
 				</div>
 				<div className="flex flex-col lg:flex-row p-8 gap-5 items-center justify-start">
 					<div className="flex flex-col gap-y-4 w-1/2 pl-4">
+						<div>
+							<button
+								onClick={() => navigate('/dashboard')}
+								className={`bg-primary text-white text-sm font-bold py-2 px-4 rounded-lg cursor-pointer border-2 border-primary
+							hover:bg-blue-900 flex mb-5
+							active:bg-white active:text-primary active:border-2 active:border-primary`}>
+								<IconHome stroke={2} className="size-5 text-white mr-2" /> <p>Volver al Inicio</p>
+							</button>
+						</div>
 						<h2 className="text-2xl font-semibold ">Información del Usuario</h2>
 						<div className="">
 							<label className="block text-lg font-medium">Nombre del Usuario</label>
@@ -216,6 +233,12 @@ const PayDetails = () => {
 							) : (
 								<p>No hay productos en el carrito.</p>
 							)}
+						</div>
+						<div>
+							<h2 className="text-2xl font-semibold mt-4">Total</h2>
+							<p className="text-3xl font-semibold text-blue-700">
+								${totalCart.toFixed(2)}
+							</p>
 						</div>
 					</div>
 				</div>

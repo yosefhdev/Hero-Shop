@@ -165,7 +165,7 @@ const LandingPage = () => {
 	}, [orderBy, asc, articulo])
 
 
-	let totalCart = 0;
+
 
 
 	// useEffect(() => {
@@ -211,10 +211,33 @@ const LandingPage = () => {
 			console.log('error', error)
 		} else {
 			console.log('Producto eliminado del carrito')
+			const { data: cartData, error: cartError } = await supabase
+				.from('carrito')
+				.select(`
+							id,
+							producto_id,
+							cantidad,
+							productos (
+								id,
+								nombre,
+								precio,
+								img_url
+							)
+						`)
+				.eq('usuario_id', userData.id);
+
+			if (cartError) {
+				setFetchCartError("Error al cargar el carrito");
+				console.error('Error al cargar el carrito:', cartError.message);
+				setProductosCart(null);
+			} else {
+				setProductosCart(cartData);
+				setFetchCartError(null);
+			}
 		}
 
 	}
-
+	let totalCart = 0;
 	if (productosCart) {
 		productosCart.forEach(item => {
 			totalCart += item.productos.precio * item.cantidad
@@ -247,6 +270,54 @@ const LandingPage = () => {
 	const toggleMenu = () => {
 		setIsMenuOpen(!isMenuOpen);
 	};
+
+	const handleUpdateQuantity = async (itemId, newQuantity) => {
+		// Verificar que la nueva cantidad no sea menor que 1
+		if (newQuantity < 1) {
+			return;
+		}
+
+		// Actualizar la cantidad en la base de datos
+		const { data, error } = await supabase
+			.from('carrito')
+			.update({ cantidad: newQuantity })
+			.eq('producto_id', itemId)
+			.eq('usuario_id', userData.id)
+			.select();
+
+		if (error) {
+			console.error('Error al actualizar la cantidad del producto en el carrito:', error);
+			return;
+		}
+
+		console.log('Cantidad del producto actualizada en el carrito:', data);
+
+		// Actualizar el estado local para reflejar el cambio en la UI
+		const { data: cartData, error: cartError } = await supabase
+			.from('carrito')
+			.select(`
+							id,
+							producto_id,
+							cantidad,
+							productos (
+								id,
+								nombre,
+								precio,
+								img_url
+							)
+						`)
+			.eq('usuario_id', userData.id);
+
+		if (cartError) {
+			setFetchCartError("Error al cargar el carrito");
+			console.error('Error al cargar el carrito:', cartError.message);
+			setProductosCart(null);
+		} else {
+			setProductosCart(cartData);
+			setFetchCartError(null);
+		}
+	};
+
 
 	return (
 
@@ -360,9 +431,23 @@ const LandingPage = () => {
 															</td>
 															<td>
 																<p className='text-sm'>{item.productos.nombre}</p>
+																<p className='text-sm'>{item.id}</p>
 															</td>
 															<td>
-																<p className='text-sm'>{item.cantidad}</p>
+																{/* <p className='text-sm'>{item.cantidad}</p> */}
+																<div className='flex items-center'>
+																	<button
+																		className='text-sm text-gray-500'
+																		onClick={() => handleUpdateQuantity(item.producto_id, item.cantidad - 1)}>
+																		-
+																	</button>
+																	<p className='text-sm mx-2'>{item.cantidad}</p>
+																	<button
+																		className='text-sm text-gray-500'
+																		onClick={() => handleUpdateQuantity(item.producto_id, item.cantidad + 1)}>
+																		+
+																	</button>
+																</div>
 															</td>
 															<td>
 																<p className='text-sm'>${item.productos.precio}</p>
