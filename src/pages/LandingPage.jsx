@@ -516,7 +516,7 @@ const LandingPage = () => {
 								<li><a href="#" className="text-white block py-2 px-6 text-lg">Vision</a></li>
 							</ul>
 						</li>
-						<li><Link to="/products" className="text-white block py-4 px-6 text-lg">Productos</Link></li>
+						<li><Link to="/" className="text-white block py-4 px-6 text-lg">Productos</Link></li>
 						<li><a href="#" className="text-white block py-4 px-6 text-lg">Ofertas</a></li>
 						<li><a href="#" className="text-white block py-4 px-6 text-lg">Garantia</a></li>
 						<li><a href="#" className="text-white block py-4 px-6 text-lg">Contactenos</a></li>
@@ -593,8 +593,6 @@ const LandingPage = () => {
 							))}
 						</div>
 					</section>
-					<br />
-					<br />
 					{/* Productos */}
 					<section>
 						<Title title={"Top Articulos"} />
